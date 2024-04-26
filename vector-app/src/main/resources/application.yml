@@ -1,0 +1,5 @@
+server:
+  port: 22222
+spring:
+  profiles:
+    active: dev

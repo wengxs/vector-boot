@@ -1,0 +1,67 @@
+package ${packageName}.controller.admin;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.vector.common.core.pagination.Pageable;
+import com.vector.common.core.result.PageResult;
+import com.vector.common.core.result.R;
+import ${packageName}.entity.${ClassName};
+import ${packageName}.service.${ClassName}Service;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * ${tableComment} Controller
+ */
+@RestController
+@RequestMapping("/${moduleName}/${bizName}")
+public class ${ClassName}Controller {
+
+    @Autowired
+    private ${ClassName}Service ${className}Service;
+
+    @GetMapping("/list")
+    public R<PageResult> list(@RequestParam Map<String, Object> params) {
+        ${ClassName} query = Pageable.getQuery(params, ${ClassName}.class);
+        IPage<${ClassName}> page = ${className}Service.page(Pageable.getPage(params), new LambdaQueryWrapper<>(${ClassName}.class)
+#foreach ($tableField in $tableFields)
+#if($tableField.isQuery)
+#set($javaField = ${tableField.javaField.substring(0,1).toUpperCase()} + ${tableField.javaField.substring(1)})
+#if($tableField.javaType == "String")
+                .eq(StringUtils.isNotBlank(query.get${javaField}()), ${ClassName}::get${javaField}, query.get${javaField}())
+#else
+                .eq(query.get${javaField}() != null, ${ClassName}::get${javaField}, query.get${javaField}())
+#end
+#end
+#end
+        );
+        return R.page(page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/{id}")
+    public R<${ClassName}> get(@PathVariable ${pkJavaType} id) {
+        return R.ok(${className}Service.getById(id));
+    }
+
+    @PostMapping
+    public R<?> add(@RequestBody ${ClassName} ${className}) {
+        ${className}Service.save(${className});
+        return R.ok();
+    }
+
+    @PutMapping
+    public R<?> update(@RequestBody ${ClassName} ${className}) {
+        ${className}Service.updateById(${className});
+        return R.ok();
+    }
+
+    @DeleteMapping("/{ids}")
+    public R<?> delete(@PathVariable List<${pkJavaType}> ids) {
+        ${className}Service.removeByIds(ids);
+        return R.ok();
+    }
+}

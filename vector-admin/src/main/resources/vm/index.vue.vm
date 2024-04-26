@@ -1,0 +1,123 @@
+<template>
+  <div class="app-container">
+    <el-form :inline="true" :model="listQuery" ref="queryForm" class="filter-container">
+#foreach ($tableField in $tableFields)
+#if($tableField.isQuery)
+      <el-form-item prop="${tableField.javaField}">
+        <el-input size="mini" class="filter-item" v-model="listQuery.${tableField.javaField}" placeholder="${tableField.comment}" clearable/>
+      </el-form-item>
+#end
+#end
+      <el-form-item>
+        <el-button type="primary" size="mini" icon="el-icon-search" @click="handleQuery">查询</el-button>
+        <el-button size="mini" icon="el-icon-refresh" @click="resetForm('queryForm')">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-button-group class="btn-container">
+      <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd"
+                 v-permission="['${permissionPrefix}add']">添加</el-button>
+      <el-button type="success" size="mini" icon="el-icon-edit" @click="handleEdit"
+                 v-permission="['${permissionPrefix}edit']" :disabled="ids.length !== 1">修改</el-button>
+      <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDel"
+                 v-permission="['${permissionPrefix}del']" :disabled="ids.length === 0">删除</el-button>
+    </el-button-group>
+
+    <el-table v-loading="listLoading" :data="list" @selection-change="handleSelectionChange"
+              border highlight-current-row size="mini">
+      <el-table-column type="selection" align="center" width="40"/>
+#foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id"
+  && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+      <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center"/>
+#end
+#end
+      <el-table-column label="创建人" prop="createBy" align="center" width="80"/>
+      <el-table-column label="创建时间" prop="createTime" align="center" width="140"/>
+      <el-table-column label="操作" align="center" width="100" fixed="right">
+        <template slot-scope="{ row }">
+          <el-button type="text" size="mini" @click="handleEdit(row)" v-permission="['${permissionPrefix}edit']">修改</el-button>
+          <el-button type="text" size="mini" @click="handleDel(row)" v-permission="['${permissionPrefix}del']">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+
+    <add-or-update :visible.sync="addOrUpdateVisible" ref="addOrUpdate" @submitted="getList"/>
+  </div>
+</template>
+
+<script>
+import { list${BizName}, del${BizName} } from '@/api/${moduleName}/${bizName}'
+import AddOrUpdate from "./AddOrUpdate"
+
+export default {
+  name: "${ClassName}",
+  components: { AddOrUpdate },
+  data() {
+    return {
+      ids:[],
+      total: 0,
+      list: [],
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        pageSize: 10,
+        sortBy: "createTime",
+        sortDirection: "desc",
+#foreach ($tableField in $tableFields)
+#if($tableField.isQuery)
+        ${tableField.javaField}: undefined,
+#end
+#end
+      },
+      addOrUpdateVisible: false
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      list${BizName}(this.listQuery).then(res => {
+        const { data } = res
+        this.list = data.list
+        this.total = data.total
+        this.listLoading = false
+      })
+    },
+    handleQuery() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    handleAdd() {
+      this.addOrUpdateVisible = true
+      this.$nextTick(() => {
+        this.$refs.addOrUpdate.init()
+      })
+    },
+    handleEdit(row) {
+      const id = row.id || this.ids
+      this.addOrUpdateVisible = true
+      this.$nextTick(() => {
+        this.$refs.addOrUpdate.init(id)
+      })
+    },
+    handleDel(row) {
+      const id = row.id || this.ids
+      this.$confirm('是否确认删除?', '删除').then(() => {
+        del${BizName}(id).then(() => {
+          this.$message.success('操作成功')
+          this.getList()
+        });
+      });
+    },
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+    }
+  }
+}
+</script>

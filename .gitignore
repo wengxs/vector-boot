@@ -1,0 +1,3 @@
+# Project exclude paths
+/vector-admin/target/
+/vector-common/target/

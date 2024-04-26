@@ -1,0 +1,109 @@
+<template>
+  <el-dialog v-bind="$attrs" :title="title" :close-on-click-modal="false" @close="close">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="submitForm()" label-width="140px">
+#foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id"
+  && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+      <el-form-item label="${tableField.comment}" prop="${tableField.javaField}">
+        <el-input v-model="dataForm.${tableField.javaField}" placeholder="${tableField.comment}"></el-input>
+      </el-form-item>
+#end
+#end
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm()" :disabled="disable">确定</el-button>
+      <el-button @click="close">取消</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+import { get${BizName}, add${BizName}, update${BizName} } from '@/api/${moduleName}/${bizName}'
+
+export default {
+  name: "addOrEdit",
+  data() {
+    return {
+      visible: false,
+      title: '新增',
+      disable: true,
+      dataForm: {
+        id: undefined,
+#foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+        ${tableField.javaField}: undefined,
+#end
+#end
+      },
+      dataRule: {
+#foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+        ${tableField.javaField}: [{ required: true, message: '${tableField.comment}不能为空', trigger: 'blur' }],
+#end
+#end
+      }
+    }
+  },
+  methods: {
+    init(id) {
+      this.dataForm.id = id
+      this.title = id ? '修改' : '新增'
+      this.visible = true
+      this.disable = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
+        if (id) {
+          get${BizName}(id).then(res => {
+            const { #foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")${tableField.javaField}, #end
+#end} = res.data
+#foreach ($tableField in $tableFields)
+#if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
+  && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+            this.dataForm.${tableField.javaField} = ${tableField.javaField}
+#end
+#end
+            this.disable = false
+          })
+        } else {
+          this.disable = false
+        }
+      });
+    },
+    close() {
+      this.$emit('update:visible', false)
+    },
+    submitForm() {
+      this.#[[$]]#refs['dataForm'].validate(valid => {
+        if (valid) {
+          if (this.dataForm.id) {
+            update${BizName}(this.dataForm).then(res => {
+              if (this.resSuccess(res)) {
+                this.$message.success('操作成功')
+                this.$emit('submitted')
+                this.close()
+              } else {
+                this.#[[$]]#message.error(res.message)
+              }
+            })
+          } else {
+            add${BizName}(this.dataForm).then(res => {
+              if (this.resSuccess(res)) {
+                this.$message.success('操作成功')
+                this.$emit('submitted')
+                this.close()
+              } else {
+                this.#[[$]]#message.error(res.message)
+              }
+            })
+          }
+        }
+      })
+    }
+  }
+}
+</script>
