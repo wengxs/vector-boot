@@ -82,7 +82,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     RouterVo router = new RouterVo();
                     router.setName(convertToName(menu.getComponent()));
                     router.setPath(menu.getPath());
-                    router.setComponent(menu.getComponent());
+                    router.setComponent(StringUtils.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
                     router.setMeta(new RouterVo.Meta(menu.getName(), menu.getIcon()));
                     router.setChildren(genRouters(menus, menu.getId()));
                     routers.add(router);

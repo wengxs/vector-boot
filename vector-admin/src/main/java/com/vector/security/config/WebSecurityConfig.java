@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorization -> authorization
+                        .requestMatchers("/error/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

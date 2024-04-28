@@ -1,7 +1,7 @@
 package com.vector.common.web.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.vector.common.web.util.SecurityUtils;
+import com.vector.common.security.util.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;

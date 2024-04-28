@@ -28,7 +28,7 @@ public interface SecurityConstant {
 
 
     /** JWT存储权限前缀 */
-    String AUTHORITY_PREFIX = "ROLE_";
+    String ROLE_PREFIX = "ROLE_";
 
     /** JWT存储权限属性 */
     String JWT_AUTHORITIES_KEY = "authorities";

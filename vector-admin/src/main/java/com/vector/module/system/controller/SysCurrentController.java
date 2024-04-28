@@ -2,7 +2,7 @@ package com.vector.module.system.controller;
 
 import com.vector.common.core.constant.SecurityConstant;
 import com.vector.common.core.result.R;
-import com.vector.common.web.util.SecurityUtils;
+import com.vector.common.security.util.SecurityUtils;
 import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.entity.SysRole;
 import com.vector.module.system.entity.SysUser;
@@ -41,16 +41,17 @@ public class SysCurrentController {
         currentUserVo.setUsername(sysUser.getUsername());
         currentUserVo.setAvatar(sysUser.getAvatar());
         if (SecurityConstant.ADMIN_ID.equals(sysUser.getId())) {
-            currentUserVo.setRoles(Collections.singleton(SecurityConstant.ADMIN_ROLES));
+            currentUserVo.setRoles(Collections.singleton(SecurityConstant.ADMIN_ROLES
+                    .substring(SecurityConstant.ROLE_PREFIX.length())));
             currentUserVo.setPermissions(Collections.singleton(SecurityConstant.ADMIN_PERMISSIONS));
         } else {
             List<SysRole> sysRoles = sysUserService.listUserRole(sysUser.getId());
             List<SysMenu> sysMenus = sysMenuService.listByUserId(sysUser.getId());
             currentUserVo.setRoles(sysRoles.stream()
-                    .map(sysRole -> sysRole.getId().toString()).collect(Collectors.toSet()));
+                    .map(SysRole::getRoleKey).collect(Collectors.toSet()));
             currentUserVo.setPermissions(sysMenus.stream()
-                    .filter(sysMenu -> StringUtils.isNotBlank(sysMenu.getPermission()))
-                    .map(SysMenu::getPermission).collect(Collectors.toSet()));
+                    .map(SysMenu::getPermission)
+                    .filter(StringUtils::isNotBlank).collect(Collectors.toSet()));
         }
         return R.ok(currentUserVo);
     }

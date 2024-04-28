@@ -6,7 +6,7 @@ import com.vector.common.core.pagination.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
 import com.vector.common.core.util.BizAssert;
-import com.vector.common.web.util.SecurityUtils;
+import com.vector.common.security.util.SecurityUtils;
 import com.vector.module.system.dto.SysUserDto;
 import com.vector.module.system.entity.SysUser;
 import com.vector.module.system.service.SysUserService;
