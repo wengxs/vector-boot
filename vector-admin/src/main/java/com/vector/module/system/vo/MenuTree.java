@@ -12,7 +12,7 @@ public class MenuTree {
 
     private Long id;
 
-    private String name;
+    private String menuName;
 
     private List<MenuTree> children;
 

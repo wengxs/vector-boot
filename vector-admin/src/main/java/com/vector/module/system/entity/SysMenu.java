@@ -19,7 +19,7 @@ import java.util.List;
 public class SysMenu extends BaseEntity<Long> {
 
     /** 菜单名称 */
-    private String name;
+    private String menuName;
     /** 父级id */
     private Long parentId;
     /** 路径 */

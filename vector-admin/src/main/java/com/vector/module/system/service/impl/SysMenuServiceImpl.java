@@ -44,7 +44,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 SysMenu subMenu = new SysMenu();
                 subMenu.setParentId(entity.getId());
                 subMenu.setType(SysMenuType.BUTTON);
-                subMenu.setName(entity.getName() + permission[0]);
+                subMenu.setMenuName(entity.getMenuName() + permission[0]);
                 subMenu.setSort(i);
                 subMenu.setPermission(permissionPrefix + permission[1]);
                 baseMapper.insert(subMenu);
@@ -83,7 +83,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     router.setName(convertToName(menu.getComponent()));
                     router.setPath(menu.getPath());
                     router.setComponent(StringUtils.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
-                    router.setMeta(new RouterVo.Meta(menu.getName(), menu.getIcon()));
+                    router.setMeta(new RouterVo.Meta(menu.getMenuName(), menu.getIcon()));
                     router.setChildren(genRouters(menus, menu.getId()));
                     routers.add(router);
                 });
@@ -113,7 +113,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .forEach(menu -> {
                     MenuTree menuTree = new MenuTree();
                     menuTree.setId(menu.getId());
-                    menuTree.setName(menu.getName());
+                    menuTree.setMenuName(menu.getMenuName());
                     menuTree.setChildren(genMenuTree(menus, menu.getId()));
                     menuTrees.add(menuTree);
                 });

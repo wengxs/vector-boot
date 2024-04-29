@@ -7,6 +7,7 @@ import com.vector.common.security.domain.LoginUser;
 import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.entity.SysRole;
 import com.vector.module.system.entity.SysUser;
+import com.vector.module.system.enums.SysUserStatus;
 import com.vector.module.system.service.SysMenuService;
 import com.vector.module.system.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         loginUser.setUserId(user.getId());
         loginUser.setUsername(user.getUsername());
         loginUser.setPassword(user.getPassword());
-        loginUser.setEnabled(user.getEnabled());
+        loginUser.setEnabled(SysUserStatus.ENABLED.equals(user.getUserStatus()));
         loginUser.setPermissions(permissions);
         log.info("登录结果={}", JSON.toJSONString(loginUser));
         return loginUser;

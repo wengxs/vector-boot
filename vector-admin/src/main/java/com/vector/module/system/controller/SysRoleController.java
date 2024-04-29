@@ -33,7 +33,7 @@ public class SysRoleController {
     public R<PageResult> list(@RequestParam Map<String, Object> params) {
         SysRole query = Pageable.getQuery(params, SysRole.class);
         IPage<SysRole> page = sysRoleService.page(Pageable.getPage(params), new LambdaQueryWrapper<SysRole>()
-                .like(StringUtils.isNotBlank(query.getName()), SysRole::getName, query.getName())
+                .like(StringUtils.isNotBlank(query.getRoleName()), SysRole::getRoleName, query.getRoleName())
                 .eq(StringUtils.isNotBlank(query.getRoleKey()), SysRole::getRoleKey, query.getRoleKey())
         );
         return R.page(page.getRecords(), page.getTotal());
@@ -53,7 +53,7 @@ public class SysRoleController {
 //    @PreAuthorize("hasAuthority('sys:role:add')")
     public R<?> add(@RequestBody SysRoleDto sysRole) {
         BizAssert.notEmpty(sysRole.getMenuIds(), "必须选择一个菜单");
-        BizAssert.isTrue(!sysRoleService.exists(sysRole.getName()), sysRole.getName() + "已存在");
+        BizAssert.isTrue(!sysRoleService.exists(sysRole.getRoleName()), sysRole.getRoleName() + "已存在");
         sysRole.setId(null);
         sysRoleService.saveOrUpdate(sysRole, Arrays.asList(sysRole.getMenuIds()));
         return R.ok();

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 public class SysRole extends BaseEntity<Long> {
 
     /** 角色名称 */
-    private String name;
+    private String roleName;
 
     /** 角色标识 */
     private String roleKey;

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.system.mapper.SysUserMapper">
+
+    <resultMap id="SysUserVoResult" type="com.vector.module.system.vo.SysUserVo">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="username" column="username"/>
+        <result property="mobile" column="mobile"/>
+        <result property="avatar" column="avatar"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="roleNames" column="role_names"/>
+    </resultMap>
+
+    <sql id="selectSysUserVoSql">
+        SELECT p.id, p.create_time, p.create_by, p.username, p.mobile, p.user_status,
+               p.avatar, GROUP_CONCAT(sr.role_name) role_names
+        FROM sys_user p
+        LEFT JOIN sys_user_role sur ON sur.user_id=p.id
+        LEFT JOIN sys_role sr ON sr.id=sur.role_id
+    </sql>
+
+    <select id="selectVoById" parameterType="Long"
+            resultMap="SysUserVoResult">
+        <include refid="selectSysUserVoSql"/>
+        WHERE p.id=#{id}
+        GROUP BY p.id
+    </select>
+
+    <select id="selectVoPage" resultMap="SysUserVoResult"
+            parameterType="com.vector.module.system.vo.SysUserVo">
+        <include refid="selectSysUserVoSql"/>
+        <where>
+            <if test="q.createBy != null and q.createBy != ''"> AND p.create_by = #{q.createBy}</if>
+            <if test="q.username != null and q.username != ''"> AND p.username LIKE concat('%', #{q.username}, '%')</if>
+            <if test="q.mobile != null "> AND p.mobile = #{q.mobile}</if>
+            <if test="q.userStatus != null "> AND p.user_status = #{q.userStatus}</if>
+            <if test="q.createBegin != null and q.createEnd != null">
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.roleId != null">
+                AND EXISTS(SELECT 1 FROM sys_user_role sur WHERE sur.user_id=p.id AND usr.role_id=#{q.roleId})
+            </if>
+        </where>
+        GROUP BY p.id
+        ORDER BY p.id DESC
+    </select>
+
+</mapper>

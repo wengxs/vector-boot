@@ -2,6 +2,7 @@ package com.vector.module.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.vector.common.core.entity.BaseEntity;
+import com.vector.module.system.enums.SysUserStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,10 +21,13 @@ public class SysUser extends BaseEntity<Long> {
     /** 密码 */
     private String password;
 
+    /** 手机号码 */
+    private String mobile;
+
     /** 用户头像 */
     private String avatar;
 
     /** 帐号状态（0停用，1正常） */
-    private Boolean enabled;
+    private SysUserStatus userStatus;
 
 }
