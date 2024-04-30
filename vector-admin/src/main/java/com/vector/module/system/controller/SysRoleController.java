@@ -1,6 +1,5 @@
 package com.vector.module.system.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.pagination.Pageable;
 import com.vector.common.core.result.PageResult;
@@ -10,7 +9,7 @@ import com.vector.module.system.dto.SysRoleDto;
 import com.vector.module.system.entity.SysRole;
 import com.vector.module.system.service.SysMenuService;
 import com.vector.module.system.service.SysRoleService;
-import org.apache.commons.lang3.StringUtils;
+import com.vector.module.system.vo.SysRoleVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,40 +30,39 @@ public class SysRoleController {
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:role:query')")
     public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        SysRole query = Pageable.getQuery(params, SysRole.class);
-        IPage<SysRole> page = sysRoleService.page(Pageable.getPage(params), new LambdaQueryWrapper<SysRole>()
-                .like(StringUtils.isNotBlank(query.getRoleName()), SysRole::getRoleName, query.getRoleName())
-                .eq(StringUtils.isNotBlank(query.getRoleKey()), SysRole::getRoleKey, query.getRoleKey())
-        );
+        SysRoleVo query = Pageable.getQuery(params, SysRoleVo.class);
+        IPage<SysRoleVo> page = sysRoleService.pageVo(Pageable.getPage(params), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
 //    @PreAuthorize("hasAuthority('sys:role:query')")
-    public R<SysRoleDto> get(@PathVariable Long id) {
-        SysRole sysRole = sysRoleService.getById(id);
-        SysRoleDto roleDto = new SysRoleDto();
-        BeanUtils.copyProperties(sysRole, roleDto);
-        roleDto.setPermissionIds(sysMenuService.listIdsByRoleId(id));
-        return R.ok(roleDto);
+    public R<SysRoleVo> get(@PathVariable Long id) {
+        SysRoleVo roleVo = sysRoleService.getVoById(id);
+        roleVo.setMenuIds(sysMenuService.listIdsByRoleId(id));
+        return R.ok(roleVo);
     }
 
     @PostMapping
 //    @PreAuthorize("hasAuthority('sys:role:add')")
-    public R<?> add(@RequestBody SysRoleDto sysRole) {
-        BizAssert.notEmpty(sysRole.getMenuIds(), "必须选择一个菜单");
-        BizAssert.isTrue(!sysRoleService.exists(sysRole.getRoleName()), sysRole.getRoleName() + "已存在");
+    public R<?> add(@RequestBody SysRoleDto roleDto) {
+        BizAssert.notEmpty(roleDto.getMenuIds(), "必须选择一个菜单");
+        BizAssert.isTrue(!sysRoleService.exists(roleDto.getRoleName()), roleDto.getRoleName() + "已存在");
+        SysRole sysRole = new SysRole();
+        BeanUtils.copyProperties(roleDto, sysRole);
         sysRole.setId(null);
-        sysRoleService.saveOrUpdate(sysRole, Arrays.asList(sysRole.getMenuIds()));
+        sysRoleService.saveOrUpdate(sysRole, Arrays.asList(roleDto.getMenuIds()));
         return R.ok();
     }
 
     @PutMapping
 //    @PreAuthorize("hasAuthority('sys:role:edit')")
-    public R<?> update(@RequestBody SysRoleDto sysRole) {
-        BizAssert.isTrue(sysRole.getId() != 1L, "不允许操作超级管理员");
-        BizAssert.notEmpty(sysRole.getMenuIds(), "必须选择一个菜单");
-        sysRoleService.saveOrUpdate(sysRole, Arrays.asList(sysRole.getMenuIds()));
+    public R<?> update(@RequestBody SysRoleDto roleDto) {
+        BizAssert.isTrue(roleDto.getId() != 1L, "不允许操作超级管理员");
+        BizAssert.notEmpty(roleDto.getMenuIds(), "必须选择一个菜单");
+        SysRole sysRole = new SysRole();
+        BeanUtils.copyProperties(roleDto, sysRole);
+        sysRoleService.saveOrUpdate(sysRole, Arrays.asList(roleDto.getMenuIds()));
         return R.ok();
     }
 

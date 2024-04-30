@@ -80,4 +80,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             sysUserRoleService.remove(new LambdaQueryWrapper<SysUserRole>().eq(SysUserRole::getUserId, id));
         }
     }
+
+    @Override
+    public List<Long> listIdsByUserId(Long userId) {
+        return baseMapper.selectIdsByUserId(userId);
+    }
 }

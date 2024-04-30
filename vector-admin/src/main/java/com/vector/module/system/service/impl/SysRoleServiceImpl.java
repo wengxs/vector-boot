@@ -1,6 +1,7 @@
 package com.vector.module.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.util.BizAssert;
 import com.vector.module.system.entity.SysRole;
@@ -10,6 +11,7 @@ import com.vector.module.system.mapper.SysRoleMapper;
 import com.vector.module.system.service.SysRoleMenuService;
 import com.vector.module.system.service.SysRoleService;
 import com.vector.module.system.service.SysUserRoleService;
+import com.vector.module.system.vo.SysRoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,16 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private SysRoleMenuService sysRoleMenuService;
     @Autowired
     private SysUserRoleService sysUserRoleService;
+
+    @Override
+    public SysRoleVo getVoById(Long id) {
+        return baseMapper.selectVoById(id);
+    }
+
+    @Override
+    public IPage<SysRoleVo> pageVo(IPage<?> page, SysRoleVo query) {
+        return baseMapper.selectVoPage(page, query);
+    }
 
     @Override
     public boolean exists(String name) {

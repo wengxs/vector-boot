@@ -26,4 +26,6 @@ public interface SysUserService extends IService<SysUser> {
     void saveOrUpdate(SysUser sysUser, List<Long> roleIds);
 
     void delete(Long[] ids);
+
+    List<Long> listIdsByUserId(Long userId);
 }

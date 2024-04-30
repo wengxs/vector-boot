@@ -40,4 +40,6 @@ public interface SecurityConstant {
     String ADMIN_PERMISSIONS = "*:*:*";
 
     String ADMIN_ROLES = "ROLE_*";
+
+    String DEFAULT_PASSWORD = "123456";
 }

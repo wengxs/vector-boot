@@ -1,20 +1,25 @@
 package com.vector.module.system.dto;
 
-import com.vector.module.system.entity.SysRole;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wengxs
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysRoleDto extends SysRole {
+public class SysRoleDto {
 
+    /** 角色ID */
+    private Long Id;
+
+    /** 角色名称 */
+    private String roleName;
+
+    /** 角色标识 */
+    private String roleKey;
+
+    /** 角色描述 */
+    private String description;
+
+    /** 菜单权限ID */
     private Long[] menuIds;
-
-    List<Long> permissionIds = new ArrayList<>();
 }

@@ -14,8 +14,8 @@
     </resultMap>
 
     <sql id="selectSysUserVoSql">
-        SELECT p.id, p.create_time, p.create_by, p.username, p.mobile, p.user_status,
-               p.avatar, GROUP_CONCAT(sr.role_name) role_names
+        SELECT p.id, p.create_time, p.create_by, p.username, p.mobile, p.user_status, p.avatar,
+               GROUP_CONCAT(sr.role_name) role_names
         FROM sys_user p
         LEFT JOIN sys_user_role sur ON sur.user_id=p.id
         LEFT JOIN sys_role sr ON sr.id=sur.role_id
@@ -34,8 +34,8 @@
         <where>
             <if test="q.createBy != null and q.createBy != ''"> AND p.create_by = #{q.createBy}</if>
             <if test="q.username != null and q.username != ''"> AND p.username LIKE concat('%', #{q.username}, '%')</if>
-            <if test="q.mobile != null "> AND p.mobile = #{q.mobile}</if>
-            <if test="q.userStatus != null "> AND p.user_status = #{q.userStatus}</if>
+            <if test="q.mobile != null and q.mobile != ''"> AND p.mobile = #{q.mobile}</if>
+            <if test="q.userStatus != null"> AND p.user_status = #{q.userStatus}</if>
             <if test="q.createBegin != null and q.createEnd != null">
                 AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>

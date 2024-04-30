@@ -1,21 +1,32 @@
 package com.vector.module.system.dto;
 
-import com.vector.module.system.entity.SysRole;
-import com.vector.module.system.entity.SysUser;
+import com.vector.module.system.enums.SysUserStatus;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author wengxs
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysUserDto extends SysUser {
+public class SysUserDto {
 
+    /** 用户ID */
+    private Long Id;
+
+    /** 用户名 */
+    private String username;
+
+    /** 密码 */
+    private String password;
+
+    /** 手机号码 */
+    private String mobile;
+
+    /** 用户头像 */
+    private String avatar;
+
+    /** 帐号状态（0停用，1正常） */
+    private SysUserStatus userStatus;
+
+    /** 角色ID */
     private Long[] roleIds;
-
-    List<SysRole> roles = new ArrayList<>();
 }
