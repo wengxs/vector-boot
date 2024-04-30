@@ -138,6 +138,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .forEach(menu -> {
                     SysMenuVo menuVo = new SysMenuVo();
                     BeanUtils.copyProperties(menu, menuVo);
+                    menuVo.setId(menu.getId());
                     menuVo.setChildren(genTree(menus, menu.getId()));
                     sysMenus.add(menuVo);
                 });
