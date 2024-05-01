@@ -8,10 +8,11 @@
         <result property="createBy" column="create_by"/>
         <result property="roleName" column="role_name"/>
         <result property="roleKey" column="role_key"/>
+        <result property="description" column="description"/>
     </resultMap>
 
     <sql id="selectSysRoleVoSql">
-        SELECT p.id, p.create_time, p.create_by, p.role_name, p.role_key
+        SELECT p.id, p.create_time, p.create_by, p.role_name, p.role_key, p.description
         FROM sys_role p
     </sql>
 

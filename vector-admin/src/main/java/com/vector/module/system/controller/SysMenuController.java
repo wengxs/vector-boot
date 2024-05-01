@@ -1,6 +1,7 @@
 package com.vector.module.system.controller;
 
 import com.vector.common.core.result.R;
+import com.vector.module.system.dto.SysMenuDto;
 import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.service.SysMenuService;
 import com.vector.module.system.vo.MenuTree;
@@ -37,8 +38,8 @@ public class SysMenuController {
 
     @PostMapping
 //    @PreAuthorize("hasAuthority('sys:menu:add')")
-    public R<?> add(@RequestBody SysMenu sysMenu) {
-        sysMenuService.save(sysMenu);
+    public R<?> add(@RequestBody SysMenuDto menuDto) {
+        sysMenuService.save(menuDto);
         return R.ok();
     }
 
@@ -52,7 +53,7 @@ public class SysMenuController {
     @DeleteMapping("/{id}")
 //    @PreAuthorize("hasAuthority('sys:menu:del')")
     public R<?> delete(@PathVariable Long id) {
-        sysMenuService.removeById(id);
+        sysMenuService.removeAllById(id, true);
         return R.ok();
     }
 

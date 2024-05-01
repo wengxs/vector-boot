@@ -46,6 +46,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
+    @Transactional
     public void saveOrUpdate(SysRole sysRole, List<Long> menuIds) {
         if (sysRole.getId() == null) {
             baseMapper.insert(sysRole);

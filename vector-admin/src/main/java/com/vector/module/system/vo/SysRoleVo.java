@@ -29,6 +29,9 @@ public class SysRoleVo {
     /** 角色编码 */
     private String roleKey;
 
+    /** 角色描述 */
+    private String description;
+
     /** 菜单权限ID */
     private List<Long> menuIds;
 

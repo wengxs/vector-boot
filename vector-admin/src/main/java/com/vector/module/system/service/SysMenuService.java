@@ -1,6 +1,7 @@
 package com.vector.module.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.vector.module.system.dto.SysMenuDto;
 import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.vo.MenuTree;
 import com.vector.module.system.vo.RouterVo;
@@ -24,4 +25,13 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenuVo> listTree();
 
     List<MenuTree> routerTree();
+
+    void save(SysMenuDto menuDto);
+
+    /**
+     * 删除菜单及子菜单
+     * @param id 菜单ID
+     * @param assignCheck 是否角色分配校验
+     */
+    void removeAllById(Long id, boolean assignCheck);
 }

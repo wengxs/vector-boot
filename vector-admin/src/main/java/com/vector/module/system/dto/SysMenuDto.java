@@ -1,23 +1,21 @@
-package com.vector.module.system.entity;
+package com.vector.module.system.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.vector.common.core.entity.BaseEntity;
+import com.vector.module.system.enums.SysMenuPermission;
 import com.vector.module.system.enums.SysMenuType;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
- * 系统菜单
+ * vector-boot
+ *
  * @author wengxs
+ * @date 2024/5/1
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName("sys_menu")
-public class SysMenu extends BaseEntity<Long> {
-
+public class SysMenuDto {
+    /** 菜单ID */
+    private Long id;
     /** 菜单名称 */
     private String menuName;
     /** 父级id */
@@ -34,5 +32,6 @@ public class SysMenu extends BaseEntity<Long> {
     private String icon;
     /** 排序 */
     private Integer sort;
-
+    /** 子权限 */
+    private List<SysMenuPermission> subPermissions;
 }

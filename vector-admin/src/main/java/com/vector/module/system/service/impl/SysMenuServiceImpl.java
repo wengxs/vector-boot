@@ -4,16 +4,22 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.constant.SecurityConstant;
+import com.vector.common.core.util.BizAssert;
+import com.vector.module.system.dto.SysMenuDto;
 import com.vector.module.system.entity.SysMenu;
+import com.vector.module.system.entity.SysRoleMenu;
+import com.vector.module.system.enums.SysMenuPermission;
 import com.vector.module.system.enums.SysMenuType;
 import com.vector.module.system.mapper.SysMenuMapper;
 import com.vector.module.system.service.SysMenuService;
+import com.vector.module.system.service.SysRoleMenuService;
 import com.vector.module.system.vo.MenuTree;
 import com.vector.module.system.vo.RouterVo;
 import com.vector.module.system.vo.SysMenuVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,30 +33,54 @@ import java.util.List;
 @Slf4j
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
+    @Autowired
+    private SysRoleMenuService sysRoleMenuService;
+
     @Override
     @Transactional
-    public boolean save(SysMenu entity) {
-        baseMapper.insert(entity);
-        if (SysMenuType.MENU.equals(entity.getType()) && entity.getSubPermissions() != null) {
+    public void save(SysMenuDto menuDto) {
+        SysMenu sysMenu = new SysMenu();
+        BeanUtils.copyProperties(menuDto, sysMenu);
+        baseMapper.insert(sysMenu);
+        if (SysMenuType.MENU.equals(sysMenu.getType()) && menuDto.getSubPermissions() != null) {
             String permissionPrefix;
-            if (StringUtils.isNotBlank(entity.getPermission())) {
-                permissionPrefix = entity.getPermission().substring(0, entity.getPermission().lastIndexOf(":") + 1);
+            if (StringUtils.isNotBlank(menuDto.getPermission())) {
+                permissionPrefix = menuDto.getPermission().substring(0, menuDto.getPermission().lastIndexOf(":") + 1);
             } else {
-                permissionPrefix = entity.getComponent().replace("/", ":") + ":";
+                permissionPrefix = menuDto.getComponent().replace("/", ":");
+                permissionPrefix = permissionPrefix.substring(0, permissionPrefix.lastIndexOf(":") + 1);
             }
-            for (int i = 0; i < entity.getSubPermissions().size(); i++) {
-                String subPermission = entity.getSubPermissions().get(i);
-                String[] permission = subPermission.split(":");
+            for (int i = 0; i < menuDto.getSubPermissions().size(); i++) {
+                SysMenuPermission subPermission = menuDto.getSubPermissions().get(i);
                 SysMenu subMenu = new SysMenu();
-                subMenu.setParentId(entity.getId());
+                subMenu.setParentId(sysMenu.getId());
                 subMenu.setType(SysMenuType.BUTTON);
-                subMenu.setMenuName(entity.getMenuName() + permission[0]);
+                subMenu.setMenuName(sysMenu.getMenuName() + "-" + subPermission.getDesc());
                 subMenu.setSort(i);
-                subMenu.setPermission(permissionPrefix + permission[1]);
+                subMenu.setPermission(permissionPrefix + subPermission.name().toLowerCase());
                 baseMapper.insert(subMenu);
             }
         }
-        return true;
+    }
+
+    @Override
+    @Transactional
+    public void removeAllById(Long id, boolean assignCheck) {
+        List<Long> assignedMenuIds = sysRoleMenuService.listAllMenuIds();
+        removeChildren(id, assignCheck, assignedMenuIds);
+    }
+
+    private void removeChildren(Long id, boolean assignCheck, List<Long> assignedMenuIds) {
+        if (assignedMenuIds.contains(id)) {
+            BizAssert.isTrue(!assignCheck, "菜单已分配，请先删除角色菜单");
+            sysRoleMenuService.remove(new LambdaQueryWrapper<SysRoleMenu>().eq(SysRoleMenu::getMenuId, id));
+        }
+        List<SysMenu> subMenus = baseMapper.selectList(
+                new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id));
+        for (SysMenu subMenu : subMenus) {
+            removeChildren(subMenu.getId(), assignCheck, assignedMenuIds);
+        }
+        baseMapper.deleteById(id);
     }
 
     @Override
