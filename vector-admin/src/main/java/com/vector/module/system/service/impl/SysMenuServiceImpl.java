@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu sysMenu = new SysMenu();
         BeanUtils.copyProperties(menuDto, sysMenu);
         baseMapper.insert(sysMenu);
-        if (SysMenuType.MENU.equals(sysMenu.getType()) && menuDto.getSubPermissions() != null) {
+        if (sysMenu.getParentId() == 0L || SysMenuType.BUTTON.equals(sysMenu.getType())) {
+            return;
+        }
+        if (!CollectionUtils.isEmpty(menuDto.getSubPermissions())) {
             String permissionPrefix;
             if (StringUtils.isNotBlank(menuDto.getPermission())) {
                 permissionPrefix = menuDto.getPermission().substring(0, menuDto.getPermission().lastIndexOf(":") + 1);
