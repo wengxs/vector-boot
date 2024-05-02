@@ -1,123 +1,205 @@
 <template>
   <div class="app-container">
-    <el-form :inline="true" :model="listQuery" ref="queryForm" class="filter-container">
+    <div class="search-container">
+      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+        <el-form-item label="创建时间">
+          <el-date-picker
+            class="!w-[240px]"
+            v-model="dateTimeRange"
+            type="daterange"
+            range-separator="~"
+            start-placeholder="开始时间"
+            end-placeholder="截止时间"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
 #foreach ($tableField in $tableFields)
 #if($tableField.isQuery)
-      <el-form-item prop="${tableField.javaField}">
-        <el-input size="mini" class="filter-item" v-model="listQuery.${tableField.javaField}" placeholder="${tableField.comment}" clearable/>
-      </el-form-item>
+        <el-form-item label="${tableField.comment}" prop="${tableField.javaField}">
+          <el-input
+            v-model="queryParams.${tableField.javaField}"
+            placeholder="${tableField.comment}"
+            clearable
+            style="width: 160px"
+            @keyup.enter="handleQuery"
+          />
+        </el-form-item>
 #end
 #end
-      <el-form-item>
-        <el-button type="primary" size="mini" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <el-button size="mini" icon="el-icon-refresh" @click="resetForm('queryForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item>
+          <el-button type="primary" @click="handleQuery"><i-ep-search />搜索</el-button>
+          <el-button @click="resetQuery"><i-ep-refresh />重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-    <el-button-group class="btn-container">
-      <el-button type="primary" size="mini" icon="el-icon-plus" @click="handleAdd"
-                 v-permission="['${permissionPrefix}add']">添加</el-button>
-      <el-button type="success" size="mini" icon="el-icon-edit" @click="handleEdit"
-                 v-permission="['${permissionPrefix}edit']" :disabled="ids.length !== 1">修改</el-button>
-      <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleDel"
-                 v-permission="['${permissionPrefix}del']" :disabled="ids.length === 0">删除</el-button>
-    </el-button-group>
+    <el-card shadow="never" class="table-container">
+      <template #header>
+        <el-button
+          v-hasPerm="['${permissionPrefix}add']"
+          type="success"
+          @click="openDialog('user-form')"
+        ><i-ep-plus />新增</el-button>
+        <el-button
+          v-hasPerm="['${permissionPrefix}edit']"
+          type="warning"
+          :disabled="single"
+          @click="openDialog(selectedIds[0])"
+        ><i-ep-edit />编辑</el-button>
+        <el-button
+          v-hasPerm="['${permissionPrefix}del']"
+          type="danger"
+          :disabled="multiple"
+          @click="handleDel()"
+        ><i-ep-delete />删除</el-button>
+      </template>
 
-    <el-table v-loading="listLoading" :data="list" @selection-change="handleSelectionChange"
-              border highlight-current-row size="mini">
-      <el-table-column type="selection" align="center" width="40"/>
+      <el-table
+        v-loading="loading"
+        :data="list"
+        highlight-current-row
+        border
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" align="center" width="50" />
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id"
   && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
   && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
-      <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center"/>
+        <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center"/>
 #end
 #end
-      <el-table-column label="创建人" prop="createBy" align="center" width="80"/>
-      <el-table-column label="创建时间" prop="createTime" align="center" width="140"/>
-      <el-table-column label="操作" align="center" width="100" fixed="right">
-        <template slot-scope="{ row }">
-          <el-button type="text" size="mini" @click="handleEdit(row)" v-permission="['${permissionPrefix}edit']">修改</el-button>
-          <el-button type="text" size="mini" @click="handleDel(row)" v-permission="['${permissionPrefix}del']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column label="创建时间" prop="createTime" align="center" width="180" />
+        <el-table-column label="操作" fixed="right" align="center" width="100">
+          <template #default="scope">
+            <el-button
+              v-hasPerm="['${permissionPrefix}edit']"
+              type="primary"
+              link
+              size="small"
+              @click="openDialog(scope.row.id)"
+            >编辑</el-button>
+            <el-button
+              v-hasPerm="['${permissionPrefix}del']"
+              type="primary"
+              link
+              size="small"
+              @click="handleDel(scope.row.id)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
-
-    <add-or-update :visible.sync="addOrUpdateVisible" ref="addOrUpdate" @submitted="getList"/>
+      <pagination
+        v-if="total > 0"
+        v-model:total="total"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.pageSize"
+        @pagination="handleQuery"
+      />
+    </el-card>
+    <!-- 新增/修改 -->
+    <add-or-update ref="addOrUpdateRef" @submitted="handleQuery"/>
   </div>
 </template>
 
-<script>
-import { list${BizName}, del${BizName} } from '@/api/${moduleName}/${bizName}'
-import AddOrUpdate from "./AddOrUpdate"
+<script setup lang="ts">
+import { list${BizName}, del${BizName} } from "@/api/${moduleName}/${bizName}"
+import { ${BizName}Query, ${BizName}VO } from "@/api/${moduleName}/${bizName}/types";
+import AddOrUpdate from "./add-or-update.vue";
 
-export default {
+defineOptions({
   name: "${ClassName}",
-  components: { AddOrUpdate },
-  data() {
-    return {
-      ids:[],
-      total: 0,
-      list: [],
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        pageSize: 10,
-        sortBy: "createTime",
-        sortDirection: "desc",
-#foreach ($tableField in $tableFields)
-#if($tableField.isQuery)
-        ${tableField.javaField}: undefined,
-#end
-#end
-      },
-      addOrUpdateVisible: false
-    }
-  },
-  created() {
-    this.getList()
-  },
-  methods: {
-    getList() {
-      this.listLoading = true
-      list${BizName}(this.listQuery).then(res => {
-        const { data } = res
-        this.list = data.list
-        this.total = data.total
-        this.listLoading = false
-      })
-    },
-    handleQuery() {
-      this.listQuery.page = 1
-      this.getList()
-    },
-    handleAdd() {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init()
-      })
-    },
-    handleEdit(row) {
-      const id = row.id || this.ids
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
-    },
-    handleDel(row) {
-      const id = row.id || this.ids
-      this.$confirm('是否确认删除?', '删除').then(() => {
-        del${BizName}(id).then(() => {
-          this.$message.success('操作成功')
-          this.getList()
-        });
-      });
-    },
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-    }
+  inheritAttrs: false
+});
+
+const queryFormRef = ref(ElForm); // 查询表单
+const addOrUpdateRef = ref();
+
+const list = ref<${BizName}VO[]>(); // 分页数据
+const total = ref(0); // 数据总数
+const loading = ref(false); //  加载状态
+const selectedIds = ref<number[]>([]); // 选中ID集合 用于批量操作
+const single = ref(true); // 单选禁用
+const multiple = ref(true); // 多选禁用
+const queryParams = reactive<${BizName}Query>({
+  page: 1,
+  pageSize: 10,
+});
+const dateTimeRange = ref("");
+
+watch(dateTimeRange, (newVal) => {
+  if (newVal) {
+    queryParams.createBegin = newVal[0];
+    queryParams.createEnd = newVal[1];
   }
+});
+
+/** 查询 */
+function handleQuery() {
+  loading.value = true;
+  list${BizName}(queryParams)
+    .then(({ data }) => {
+      list.value = data.list;
+      total.value = data.total;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
+
+/** 重置查询 */
+function resetQuery() {
+  queryFormRef.value.resetFields();
+  dateTimeRange.value = "";
+  queryParams.page = 1;
+  queryParams.createBegin = undefined;
+  queryParams.createEnd = undefined;
+  handleQuery();
+}
+
+/** 行选中 */
+function handleSelectionChange(selection: any) {
+  selectedIds.value = selection.map((item: any) => item.id);
+  single.value = selection.length != 1;
+  multiple.value = !selection.length
+}
+
+/** 新增 */
+function handleAdd() {
+  nextTick(() => {
+    addOrUpdateRef.value.open();
+  })
+}
+
+/** 修改 */
+function handleEdit(id: number) {
+  nextTick(() => {
+    addOrUpdateRef.value.open(id);
+  })
+}
+
+/** 删除 */
+function handleDel(id?: number) {
+  const ids: any = id || selectedIds.value;
+  if (!ids) {
+    ElMessage.warning("请勾选删除项");
+    return;
+  }
+  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    del${BizName}(ids)
+      .then(() => {
+        ElMessage.success("删除成功");
+        resetQuery();
+      });
+  });
+}
+
+onMounted(() => {
+  handleQuery();
+});
 </script>

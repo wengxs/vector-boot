@@ -1,0 +1,20 @@
+import request from "@/utils/request";
+import { AxiosPromise } from "axios";
+import { ${BizName}Query, ${BizName}VO, ${BizName}Form } from "./types";
+
+/** 获取分页列表 */
+export const list${BizName} = (queryParams: ${BizName}Query): AxiosPromise<PageResult<${BizName}VO[]>> =>
+  request.get('/${moduleName}/${bizName}/list', { params: queryParams });
+
+/** 获取详情 */
+export const get${BizName} = (id: number): AxiosPromise<${BizName}VO> =>
+  request.get(`/${moduleName}/${bizName}/${id}`);
+
+/** 添加 */
+export const add${BizName} = (data: ${BizName}Form) => request.post('/${moduleName}/${bizName}', data);
+
+/** 修改 */
+export const update${BizName} = (data: ${BizName}Form) => request.put('/${moduleName}/${bizName}', data);
+
+/** 删除 */
+export const del${BizName} = (ids: number[]) => request.delete(`/${moduleName}/${bizName}/${id}`);

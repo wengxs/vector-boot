@@ -48,9 +48,10 @@ public class VelocityUtil {
         templates.add("vm/service.java.vm");
         templates.add("vm/serviceImpl.java.vm");
         templates.add("vm/controller.java.vm");
-        templates.add("vm/index.js.vm");
+        templates.add("vm/index.ts.vm");
+        templates.add("vm/types.ts.vm");
         templates.add("vm/index.vue.vm");
-        templates.add("vm/AddOrUpdate.vue.vm");
+        templates.add("vm/add-or-update.vue.vm");
         return templates;
     }
 
