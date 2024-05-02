@@ -22,4 +22,6 @@ public interface GenTableService extends IService<GenTable> {
     IPage<GenTable> pageSchema(IPage<GenTable> page, String dbName);
 
     void importSchema(String dbName, String tableName);
+
+    void updateAll(GenTable genTable);
 }

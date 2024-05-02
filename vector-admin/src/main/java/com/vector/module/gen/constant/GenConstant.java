@@ -27,5 +27,5 @@ public interface GenConstant {
     String[] FIELD_TYPE_NUMBER = { "tinyint", "smallint", "mediumint", "int", "number", "integer",
             "bigint", "float", "float", "double", "decimal" };
 
-    String DEFAULT_PACKAGE_PREFIX = "com.vector.";
+    String DEFAULT_PACKAGE_PREFIX = "com.vector.module.";
 }

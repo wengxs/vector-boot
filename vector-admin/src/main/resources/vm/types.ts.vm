@@ -37,7 +37,7 @@ export interface ${BizName}Form {
   /** ID */
   id: number;
 #foreach ($tableField in $tableFields)
-#if($tableField.javaField != "id"
+#if($tableField.javaField != "id" && $tableField.isForm
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
 && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
   /** ${tableField.comment} */

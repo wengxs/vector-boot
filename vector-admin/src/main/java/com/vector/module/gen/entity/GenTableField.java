@@ -41,6 +41,12 @@ public class GenTableField extends BaseEntity<Long> {
     /** 是否必填（1是） */
     private Boolean isRequired;
 
+    /** 是否表单填写（1是） */
+    private Boolean isForm;
+
+    /** 表单控件类型 */
+    private String formComponent;
+
     /** 是否列表字段（1是） */
     private Boolean isList;
 
@@ -50,10 +56,10 @@ public class GenTableField extends BaseEntity<Long> {
     /** 查询方式（EQ等于、NE不等于、GT大于、LT小于、LIKE模糊、BETWEEN范围） */
     private String queryType;
 
+    /** 查询控件类型 */
+    private String queryComponent;
+
     /** 排序 */
     private Integer sort;
-
-    /** 控件类型 */
-    private String componentType;
 
 }

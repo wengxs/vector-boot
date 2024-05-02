@@ -11,11 +11,34 @@
   >
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px">
 #foreach ($tableField in $tableFields)
-#if($tableField.javaField != "id"
+#if($tableField.javaField != "id" && $tableField.isForm
   && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
   && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
       <el-form-item label="${tableField.comment}" prop="${tableField.javaField}">
+#if($tableField.formComponent == "SELECT")
+        <el-select v-model="dataForm.${tableField.javaField}" placeholder="${tableField.comment}">
+          <el-option label="Option 1" value="1" />
+          <el-option label="Option 2" value="2" />
+        </el-select>
+#elseif($tableField.formComponent == "SWITCH")
+        <el-switch v-model="dataForm.${tableField.javaField}" />
+#elseif($tableField.formComponent == "CHECKBOX")
+        <el-checkbox-group v-model="dataForm.${tableField.javaField}">
+          <el-checkbox label="Option 1" value="1" />
+          <el-checkbox label="Option 1" value="1" />
+        </el-checkbox-group>
+#elseif($tableField.formComponent == "RADIO")
+        <el-radio-group v-model="dataForm.${tableField.javaField}">
+          <el-radio value="1">Option 1</el-radio>
+          <el-radio value="2">Option 2</el-radio>
+        </el-radio-group>
+#elseif($tableField.formComponent == "NUMBER")
+        <el-input-number v-model="dataForm.${tableField.javaField}" :min="1" />
+#elseif($tableField.formComponent == "DATE")
+        <el-date-picker v-model="dataForm.${tableField.javaField}" type="date" placeholder="${tableField.comment}" />
+#else
         <el-input v-model="dataForm.${tableField.javaField}" placeholder="${tableField.comment}" />
+#end
       </el-form-item>
 #end
 #end
@@ -59,7 +82,8 @@ const formData = reactive<${BizName}Form>({});
 const rules = reactive({
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
-&& $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+&& $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy"
+&& $tableField.isForm && $tableField.isRequired)
   ${tableField.javaField}: [{ required: true, message: '${tableField.comment}不能为空', trigger: 'blur' }],
 #end
 #end
@@ -98,14 +122,14 @@ const handleSubmit = useThrottleFn(() => {
       if (formData.id) {
         update${BizName}(formData)
           .then(() => {
-            ElMessage.success("修改用户成功");
+            ElMessage.success("操作成功");
             emit("submitted")
             close();
           });
       } else {
         add${BizName}(formData)
           .then(() => {
-            ElMessage.success("新增用户成功");
+            ElMessage.success("操作成功");
             emit("submitted")
             close();
           });

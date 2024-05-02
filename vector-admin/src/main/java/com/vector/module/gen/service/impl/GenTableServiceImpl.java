@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wengxs
@@ -78,6 +75,18 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
                 tableField.setJavaType(GenConstant.JAVA_TYPE_INTEGER);
             }
         }
+        Set<String> fieidSet = new HashSet<>();
+        Collections.addAll(fieidSet, "id", "create_time", "create_by", "update_time", "update_by");
+        if (fieidSet.contains(tableField.getName())) {
+            return;
+        }
+        // 默认生成信息
+        tableField.setIsForm(tableField.getIsRequired());
+        tableField.setFormComponent("INPUT");
+        tableField.setIsList(true);
+        tableField.setIsQuery(true);
+        tableField.setQueryType("EQ");
+        tableField.setQueryComponent("INPUT");
     }
 
     private boolean containsType(String[] fieldTypes, String fieldType) {
@@ -140,8 +149,22 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
         List<GenTableField> tableFields = genTableFieldService.selectFromInformationSchema(dbName, tableName);
         for (GenTableField tableField : tableFields) {
             tableField.setTableId(table.getId());
+            tableField.setIsForm(false);
+            tableField.setIsList(false);
+            tableField.setIsQuery(false);
             fillTableFieldProperty(tableField);
             genTableFieldService.save(tableField);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateAll(GenTable genTable) {
+        baseMapper.updateById(genTable);
+        List<GenTableField> genTableFields = genTable.getFields();
+        for (GenTableField genTableField : genTableFields) {
+            genTableField.setTableId(genTable.getId());
+            genTableFieldService.updateById(genTableField);
         }
     }
 }

@@ -32,7 +32,11 @@ public class ${ClassName}Controller {
 #if($tableField.isQuery)
 #set($javaField = ${tableField.javaField.substring(0,1).toUpperCase()} + ${tableField.javaField.substring(1)})
 #if($tableField.javaType == "String")
+#if($tableField.queryType == "LIKE")
+                .like(StringUtils.isNotBlank(query.get${javaField}()), ${ClassName}::get${javaField}, query.get${javaField}())
+#else
                 .eq(StringUtils.isNotBlank(query.get${javaField}()), ${ClassName}::get${javaField}, query.get${javaField}())
+#end
 #else
                 .eq(query.get${javaField}() != null, ${ClassName}::get${javaField}, query.get${javaField}())
 #end

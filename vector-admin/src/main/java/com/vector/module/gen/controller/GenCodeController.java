@@ -35,7 +35,7 @@ public class GenCodeController {
         GenTable query = Pageable.getQuery(params, GenTable.class);
         IPage<GenTable> page = genTableService.page(Pageable.getPage(params), new LambdaQueryWrapper<GenTable>()
                 .eq(StringUtils.isNotBlank(query.getDbName()), GenTable::getDbName, query.getDbName())
-                .eq(StringUtils.isNotBlank(query.getTbName()), GenTable::getTbName, query.getTbName())
+                .like(StringUtils.isNotBlank(query.getTbName()), GenTable::getTbName, query.getTbName())
                 .like(StringUtils.isNotBlank(query.getTbComment()), GenTable::getTbComment, query.getTbComment())
         );
         return R.page(page.getRecords(), page.getTotal());
@@ -76,6 +76,12 @@ public class GenCodeController {
     @PostMapping("/schemaImport/{dbName}/{tableName}")
     public R<?> schemaImport(@PathVariable String dbName, @PathVariable String tableName) {
         genTableService.importSchema(dbName, tableName);
+        return R.ok();
+    }
+
+    @PutMapping
+    public R<?> update(@RequestBody GenTable genTable) {
+        genTableService.updateAll(genTable);
         return R.ok();
     }
 }
