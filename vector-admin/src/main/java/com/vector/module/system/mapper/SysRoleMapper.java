@@ -23,6 +23,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
     @Select("SELECT DISTINCT a.* FROM sys_role a LEFT JOIN sys_user_role b ON b.role_id=a.id WHERE b.user_id=#{userId}")
     List<SysRole> selectAllByUserId(Long userId);
 
-    @Select("select * from sys_role where name=#{name}")
-    SysRole selectOneByName(String name);
+    @Select("select * from sys_role where role_name=#{roleName}")
+    SysRole selectOneByRoleName(String roleName);
 }

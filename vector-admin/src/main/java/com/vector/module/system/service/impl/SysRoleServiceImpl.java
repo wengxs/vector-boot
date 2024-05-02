@@ -41,8 +41,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public boolean exists(String name) {
-        return baseMapper.selectOneByName(name) != null;
+    public boolean exists(String roleName) {
+        return baseMapper.selectOneByRoleName(roleName) != null;
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface SysRoleService extends IService<SysRole> {
 
     IPage<SysRoleVo> pageVo(IPage<?> page, SysRoleVo query);
 
-    boolean exists(String name);
+    boolean exists(String roleName);
 
     void saveOrUpdate(SysRole sysRole, List<Long> menuIds);
 
