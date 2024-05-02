@@ -31,6 +31,8 @@ public class RouterVo {
 
         private String icon;
 
+        private Boolean keepAlive;
+
     }
 
 }
