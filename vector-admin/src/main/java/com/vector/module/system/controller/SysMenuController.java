@@ -6,7 +6,9 @@ import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.service.SysMenuService;
 import com.vector.module.system.vo.MenuTree;
 import com.vector.module.system.vo.SysMenuVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,23 @@ public class SysMenuController {
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:menu:query')")
-    public R<List<SysMenuVo>> list() {
-        return R.ok(sysMenuService.listTree());
+    public R<List<SysMenuVo>> list(SysMenuVo params) {
+        List<SysMenuVo> list = sysMenuService.listTree();
+        return R.ok(filterQuery(list, params));
+    }
+
+    private List<SysMenuVo> filterQuery(List<SysMenuVo> list, SysMenuVo params) {
+        return list.stream().filter(item -> {
+            if (StringUtils.isNotBlank(params.getMenuName()) && item.getMenuName().contains(params.getMenuName())) {
+                return true;
+            }
+            item.setChildren(filterQuery(item.getChildren(), params));
+            if (!CollectionUtils.isEmpty(item.getChildren()) || StringUtils.isBlank(params.getMenuName())) {
+                return true;
+            } else {
+                return item.getMenuName().contains(params.getMenuName());
+            }
+        }).toList();
     }
 
     @GetMapping("/router")
