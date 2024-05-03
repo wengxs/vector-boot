@@ -1,4 +1,4 @@
-package ${packageName}.controller.admin;
+package ${packageName}.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
