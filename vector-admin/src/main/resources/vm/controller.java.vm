@@ -68,4 +68,6 @@ public class ${ClassName}Controller {
         ${className}Service.removeByIds(ids);
         return R.ok();
     }
+
+
 }

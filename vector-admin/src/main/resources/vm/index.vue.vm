@@ -50,7 +50,7 @@
         <el-button
           v-hasPerm="['${permissionPrefix}add']"
           type="success"
-          @click="handleAdd()"
+          @click="handleAdd"
         ><i-ep-plus />新增</el-button>
         <el-button
           v-hasPerm="['${permissionPrefix}edit']"
@@ -62,7 +62,7 @@
           v-hasPerm="['${permissionPrefix}del']"
           type="danger"
           :disabled="multiple"
-          @click="handleDel()"
+          @click="handleDel"
         ><i-ep-delete />删除</el-button>
       </template>
 
@@ -81,7 +81,7 @@
         <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center"/>
 #end
 #end
-        <el-table-column label="创建时间" prop="createTime" align="center" width="180" />
+        <el-table-column label="创建时间" prop="createTime" align="center" width="160" />
         <el-table-column label="操作" fixed="right" align="center" width="100">
           <template #default="scope">
             <el-button
@@ -179,16 +179,12 @@ function handleSelectionChange(selection: any) {
 
 /** 新增 */
 function handleAdd() {
-  nextTick(() => {
-    addOrUpdateRef.value.open();
-  })
+  addOrUpdateRef.value.open();
 }
 
 /** 修改 */
 function handleEdit(id: number) {
-  nextTick(() => {
-    addOrUpdateRef.value.open(id);
-  })
+  addOrUpdateRef.value.open(id);
 }
 
 /** 删除 */

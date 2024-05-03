@@ -17,4 +17,4 @@ export const add${BizName} = (data: ${BizName}Form) => request.post('/${moduleNa
 export const update${BizName} = (data: ${BizName}Form) => request.put('/${moduleName}/${bizName}', data);
 
 /** 删除 */
-export const del${BizName} = (ids: number[]) => request.delete(`/${moduleName}/${bizName}/${id}`);
+export const del${BizName} = (ids: number[]) => request.delete(`/${moduleName}/${bizName}/${ids}`);
