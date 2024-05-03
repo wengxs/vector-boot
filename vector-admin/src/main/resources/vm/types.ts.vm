@@ -15,7 +15,7 @@ export interface ${BizName}Query extends PageQuery {
  */
 export interface ${BizName}VO {
   /** ID */
-  id: number;
+  id?: number;
   /** 创建时间 */
   createTime?: Date;
   /** 创建人 */
@@ -35,7 +35,7 @@ export interface ${BizName}VO {
  */
 export interface ${BizName}Form {
   /** ID */
-  id: number;
+  id?: number;
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id" && $tableField.isForm
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
