@@ -1,6 +1,5 @@
 package com.vector.common.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vector.common.security.constant.SecurityConstant;
 import com.vector.common.security.domain.LoginUser;
 import com.vector.common.security.service.TokenService;
@@ -36,15 +35,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenService tokenService;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authHeader = request.getHeader(SecurityConstant.TOKEN_HEADER);
         // 白名单
-        log.info("request.getServletPath()：{}", request.getServletPath());
         if (WHITE_LIST.contains(request.getServletPath())) {
             filterChain.doFilter(request, response);
             return;
@@ -52,7 +48,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith(SecurityConstant.TOKEN_PREFIX)) {
             String authToken = authHeader.substring(SecurityConstant.TOKEN_PREFIX.length());
             LoginUser loginUser = tokenService.getLoginUser(authToken);
-            log.info("loginUser is {}", objectMapper.writeValueAsString(loginUser));
             if (loginUser != null) {
                 checkLoginUser(loginUser);
                 UsernamePasswordAuthenticationToken token =
