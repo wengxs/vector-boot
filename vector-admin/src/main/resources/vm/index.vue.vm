@@ -50,7 +50,7 @@
         <el-button
           v-hasPerm="['${permissionPrefix}add']"
           type="success"
-          @click="handleAdd"
+          @click="handleAdd()"
         ><i-ep-plus />新增</el-button>
         <el-button
           v-hasPerm="['${permissionPrefix}edit']"
@@ -62,7 +62,7 @@
           v-hasPerm="['${permissionPrefix}del']"
           type="danger"
           :disabled="multiple"
-          @click="handleDel"
+          @click="handleDel()"
         ><i-ep-delete />删除</el-button>
       </template>
 
@@ -194,14 +194,14 @@ function handleDel(id?: number) {
     ElMessage.warning("请勾选删除项");
     return;
   }
-  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+  ElMessageBox.confirm("确认删除已选中的数据项？", "警告", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
     del${BizName}(ids)
       .then(() => {
-        ElMessage.success("删除成功");
+        ElMessage.success("操作成功");
         resetQuery();
       });
   });

@@ -1,12 +1,21 @@
 package ${packageName}.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${packageName}.entity.${ClassName};
+import ${packageName}.vo.${ClassName}Vo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * ${tableComment} Mapper
+ * @author ${author}
+ * @date ${date}
  */
 @Mapper
 public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
+
+    ${ClassName}Vo selectVoById(Long id);
+
+    IPage<${ClassName}Vo> selectVoPage(@Param("page") IPage<?> page, @Param("q") ${ClassName}Vo query);
 }

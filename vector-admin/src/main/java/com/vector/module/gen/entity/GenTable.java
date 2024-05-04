@@ -42,6 +42,9 @@ public class GenTable extends BaseEntity<Long> {
     /** 业务名 */
     private String bizName;
 
+    /** 作者 */
+    private String author;
+
     /** 表字段列表 */
     @TableField(exist = false)
     private List<GenTableField> fields;

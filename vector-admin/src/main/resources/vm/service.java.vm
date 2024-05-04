@@ -1,10 +1,18 @@
 package ${packageName}.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import ${packageName}.entity.${ClassName};
+import ${packageName}.vo.${ClassName}Vo;
 
 /**
  * ${tableComment} Service
+ * @author ${author}
+ * @date ${date}
  */
 public interface ${ClassName}Service extends IService<${ClassName}> {
+
+    ${ClassName}Vo getVoById(Long id);
+
+    IPage<${ClassName}Vo> pageVo(IPage<?> page, ${ClassName}Vo query);
 }

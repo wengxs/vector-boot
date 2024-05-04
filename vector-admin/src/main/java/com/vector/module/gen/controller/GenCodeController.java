@@ -2,7 +2,7 @@ package com.vector.module.gen.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.vector.common.core.pagination.Pageable;
+import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
 import com.vector.module.gen.entity.GenTable;
@@ -68,6 +68,8 @@ public class GenCodeController {
 
     @GetMapping("/schemaList")
         public R<PageResult> schemaList(@RequestParam Map<String, Object> params) {
+        params.put(Pageable.DEFAULT_ORDER_BY_FIELD, "table_schema");
+        params.put(Pageable.DEFAULT_ORDER_TYPE_FIELD, "asc");
         GenTable query = Pageable.getQuery(params, GenTable.class);
         IPage<GenTable> page = genTableService.pageSchema(Pageable.getPage(params), query.getDbName());
         return R.page(page.getRecords(), page.getTotal());

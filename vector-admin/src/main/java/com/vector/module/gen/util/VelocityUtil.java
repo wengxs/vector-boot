@@ -7,7 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,20 +40,26 @@ public class VelocityUtil {
                 String.format("%s:%s:", table.getModuleName(), StringUtils.uncapitalize(table.getBizName())));
         velocityContext.put("tableFields", tableFields);
         velocityContext.put("pkJavaType", pkJavaType);
+        velocityContext.put("author", table.getAuthor());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        velocityContext.put("date", sdf.format(new Date()));
         return velocityContext;
     }
 
     public static List<String> getTemplateList() {
         List<String> templates = new ArrayList<>();
         templates.add("vm/entity.java.vm");
+        templates.add("vm/vo.java.vm");
+        templates.add("vm/dto.java.vm");
+        templates.add("vm/mapper.xml.vm");
         templates.add("vm/mapper.java.vm");
         templates.add("vm/service.java.vm");
         templates.add("vm/serviceImpl.java.vm");
         templates.add("vm/controller.java.vm");
-        templates.add("vm/index.ts.vm");
         templates.add("vm/types.ts.vm");
-        templates.add("vm/index.vue.vm");
+        templates.add("vm/index.ts.vm");
         templates.add("vm/add-or-update.vue.vm");
+        templates.add("vm/index.vue.vm");
         return templates;
     }
 

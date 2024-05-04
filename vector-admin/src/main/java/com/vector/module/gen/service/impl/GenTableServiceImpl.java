@@ -3,6 +3,7 @@ package com.vector.module.gen.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.vector.common.security.util.SecurityUtils;
 import com.vector.module.gen.constant.GenConstant;
 import com.vector.module.gen.entity.GenTable;
 import com.vector.module.gen.entity.GenTableField;
@@ -110,6 +111,7 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
         table.setPackageName(GenConstant.DEFAULT_PACKAGE_PREFIX + moduleName);
         table.setModuleName(moduleName);
         table.setBizName(convertToCamelCase(bizName));
+        table.setAuthor(SecurityUtils.getUsername());
     }
 
     private String convertToCamelCase(String str) {

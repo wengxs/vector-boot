@@ -1,15 +1,29 @@
 package ${packageName}.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ${packageName}.entity.${ClassName};
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.service.${ClassName}Service;
+import ${packageName}.vo.${ClassName}Vo;
 import org.springframework.stereotype.Service;
 
 /**
  * ${tableComment} ServiceImpl
+ * @author ${author}
+ * @date ${date}
  */
 @Service
 public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper, ${ClassName}>
         implements ${ClassName}Service {
+
+    @Override
+    public ${ClassName}Vo getVoById(Long id) {
+        return baseMapper.selectVoById(id);
+    }
+
+    @Override
+    public IPage<${ClassName}Vo> pageVo(IPage<?> page, ${ClassName}Vo query) {
+        return baseMapper.selectVoPage(page, query);
+    }
 }

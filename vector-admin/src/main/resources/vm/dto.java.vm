@@ -1,21 +1,19 @@
-package ${packageName}.entity;
+package ${packageName}.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.vector.common.core.entity.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * ${tableComment} Entity
+ * ${tableComment} Dto
  * @author ${author}
  * @date ${date}
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName("${tableName}")
-public class ${ClassName} extends BaseEntity<${pkJavaType}> {
+public class ${ClassName}Dto {
+
+    /** ID */
+    private Long id;
 #foreach ($tableField in $tableFields)
-#if($tableField.javaField != "id"
+#if($tableField.javaField != "id" && $tableField.isForm
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
 && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
 

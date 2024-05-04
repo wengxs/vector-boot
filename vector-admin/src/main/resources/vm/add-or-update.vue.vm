@@ -3,7 +3,6 @@
     v-model="visible"
     :title="title"
     :width="width"
-    append-to-body
     @close="close"
     :close-on-click-modal="false"
     draggable
@@ -17,20 +16,20 @@
       <el-form-item label="${tableField.comment}" prop="${tableField.javaField}">
 #if($tableField.formComponent == "SELECT")
         <el-select v-model="formData.${tableField.javaField}" placeholder="${tableField.comment}">
-          <el-option label="Option 1" value="1" />
-          <el-option label="Option 2" value="2" />
+          <el-option label="Option 1" :value="1" />
+          <el-option label="Option 2" :value="2" />
         </el-select>
 #elseif($tableField.formComponent == "SWITCH")
         <el-switch v-model="formData.${tableField.javaField}" />
 #elseif($tableField.formComponent == "CHECKBOX")
         <el-checkbox-group v-model="formData.${tableField.javaField}">
-          <el-checkbox label="Option 1" value="1" />
-          <el-checkbox label="Option 1" value="1" />
+          <el-checkbox label="Option 1" :value="1" />
+          <el-checkbox label="Option 2" :value="2" />
         </el-checkbox-group>
 #elseif($tableField.formComponent == "RADIO")
         <el-radio-group v-model="formData.${tableField.javaField}">
-          <el-radio value="1">Option 1</el-radio>
-          <el-radio value="2">Option 2</el-radio>
+          <el-radio :value="1">Option 1</el-radio>
+          <el-radio :value="2">Option 2</el-radio>
         </el-radio-group>
 #elseif($tableField.formComponent == "NUMBER")
         <el-input-number v-model="formData.${tableField.javaField}" :min="1" />
@@ -61,24 +60,24 @@ import { ${BizName}Form } from "@/api/${moduleName}/${bizName}/types";
 defineComponent({
   name: "add-or-update"
 })
-
 const props = defineProps({
   width: {
     type: String,
     default: "500",
   }
 });
-
 const emit = defineEmits(["submitted"]);
-// Dialog状态
-const visible = ref(false);
-// 表单
+
+/** 表单 */
 const formRef = ref(ElForm);
-// 标题
-const title = ref<string>("");
-// 表单数据
+/** 窗口状态 */
+const visible = ref(false);
+/** 窗口标题 */
+const title = ref<string>("新增");
+
+/** 表单数据 */
 const formData = reactive<${BizName}Form>({});
-// 校验规则
+/** 校验规则 */
 const rules = reactive({
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id" && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
@@ -90,8 +89,7 @@ const rules = reactive({
 });
 
 /** 打开窗口 */
-const open = (id: number) => {
-  formData.id = id;
+const open = (id?: number) => {
   title.value = id ? "修改" : "新增";
   visible.value = true;
   nextTick(() => {
@@ -110,10 +108,6 @@ const close = () => {
   formRef.value.clearValidate();
   Object.keys(formData).forEach(key => {formData[key] = undefined});
 }
-
-defineExpose({
-  open
-});
 
 /** 表单提交 */
 const handleSubmit = useThrottleFn(() => {
@@ -137,4 +131,9 @@ const handleSubmit = useThrottleFn(() => {
     }
   });
 }, 3000);
+
+/** 暴露方法 */
+defineExpose({
+  open
+});
 </script>

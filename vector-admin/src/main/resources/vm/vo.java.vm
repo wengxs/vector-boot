@@ -1,19 +1,26 @@
-package ${packageName}.entity;
+package ${packageName}.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.vector.common.core.entity.BaseEntity;
+import com.vector.common.core.query.PageQuery;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
- * ${tableComment} Entity
+ * ${tableComment} Vo
  * @author ${author}
  * @date ${date}
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName("${tableName}")
-public class ${ClassName} extends BaseEntity<${pkJavaType}> {
+public class ${ClassName}Vo extends PageQuery {
+
+    /** ID */
+    private Long id;
+
+    /** 创建时间 */
+    private Date createTime;
+
+    /** 创建人 */
+    private String createBy;
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id"
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
