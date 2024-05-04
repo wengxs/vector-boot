@@ -2,6 +2,7 @@ package ${packageName}.vo;
 
 import com.vector.common.core.query.PageQuery;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date ${date}
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ${ClassName}Vo extends PageQuery {
 
     /** ID */
