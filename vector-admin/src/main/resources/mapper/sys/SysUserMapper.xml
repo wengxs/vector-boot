@@ -44,7 +44,6 @@
             </if>
         </where>
         GROUP BY p.id
-        ORDER BY p.id DESC
     </select>
 
 </mapper>

@@ -1,7 +1,8 @@
 package com.vector.module.system.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vector.common.core.pagination.BaseQuery;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.util.List;
@@ -10,8 +11,9 @@ import java.util.List;
  * 角色视图
  * @author wengxs
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysRoleVo {
+public class SysRoleVo extends BaseQuery {
 
     /** 角色ID */
     private Long id;
@@ -34,12 +36,4 @@ public class SysRoleVo {
 
     /** 菜单权限ID */
     private List<Long> menuIds;
-
-    /** 创建时间：起 */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String createBegin;
-
-    /** 创建时间：止 */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String createEnd;
 }

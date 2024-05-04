@@ -33,7 +33,6 @@
                 AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>
         </where>
-        ORDER BY p.id DESC
     </select>
 
 </mapper>

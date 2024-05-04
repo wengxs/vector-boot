@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/sys/user")
@@ -37,9 +36,8 @@ public class SysUserController {
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:user:query')")
-    public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        SysUserVo query = Pageable.getQuery(params, SysUserVo.class);
-        IPage<SysUserVo> page = sysUserService.pageVo(Pageable.getPage(params), query);
+    public R<PageResult> list(SysUserVo query) {
+        IPage<SysUserVo> page = sysUserService.pageVo(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/sys/role")
@@ -29,9 +28,8 @@ public class SysRoleController {
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:role:query')")
-    public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        SysRoleVo query = Pageable.getQuery(params, SysRoleVo.class);
-        IPage<SysRoleVo> page = sysRoleService.pageVo(Pageable.getPage(params), query);
+    public R<PageResult> list(SysRoleVo query) {
+        IPage<SysRoleVo> page = sysRoleService.pageVo(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
