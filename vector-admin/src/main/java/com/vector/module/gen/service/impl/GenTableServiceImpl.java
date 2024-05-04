@@ -81,7 +81,7 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
             return;
         }
         // 默认生成信息
-        tableField.setIsForm(tableField.getIsRequired());
+        tableField.setIsForm(true);
         tableField.setFormComponent("INPUT");
         tableField.setIsList(true);
         tableField.setIsQuery(true);
