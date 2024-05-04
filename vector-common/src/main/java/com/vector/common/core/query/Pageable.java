@@ -1,4 +1,4 @@
-package com.vector.common.core.pagination;
+package com.vector.common.core.query;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -15,25 +15,25 @@ import java.util.Map;
 public class Pageable {
 
     /** 默认页码 */
-    private static final int DEFAULT_PAGE_NUMBER = 1;
+    public static final int DEFAULT_PAGE_NUMBER = 1;
 
     /** 默认每页记录数 */
-    private static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     /** 默认排序 */
-    private static final String DEFAULT_ORDER_BY = "p.id";
+    public static final String DEFAULT_ORDER_BY = "id";
 
     /** 默认排序 */
-    private static final String DEFAULT_PAGE_NUMBER_FIELD = "page";
+    public static final String DEFAULT_PAGE_NUMBER_FIELD = "page";
 
     /** 默认排序 */
-    private static final String DEFAULT_PAGE_SIZE_FIELD = "pageSize";
+    public static final String DEFAULT_PAGE_SIZE_FIELD = "pageSize";
 
     /** 默认排序 */
-    private static final String DEFAULT_ORDER_BY_FIELD = "sortBy";
+    public static final String DEFAULT_ORDER_BY_FIELD = "sortBy";
 
     /** 默认排序 */
-    private static final String DEFAULT_ORDER_TYPE_FIELD = "sortDirection";
+    public static final String DEFAULT_ORDER_TYPE_FIELD = "sortDirection";
 
     public static <T> T getQuery(Map<String, Object> paramsMap, Class<T> clazz) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -64,7 +64,7 @@ public class Pageable {
         return page;
     }
 
-    public static <T> IPage<T> getPage(BaseQuery query) {
+    public static <T> IPage<T> getPage(PageQuery query) {
         long current = query.getPage() != null ? query.getPage() : DEFAULT_PAGE_NUMBER;
         long size = query.getPageSize() != null ? query.getPageSize() : DEFAULT_PAGE_SIZE;
         Page<T> page = new Page<>(current, size);

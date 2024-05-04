@@ -1,7 +1,7 @@
 package com.vector.module.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.vector.common.core.pagination.Pageable;
+import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
 import com.vector.common.core.util.BizAssert;

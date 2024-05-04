@@ -1,7 +1,7 @@
 package com.vector.module.system.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vector.common.core.pagination.BaseQuery;
+import com.vector.common.core.query.PageQuery;
 import com.vector.module.system.enums.SysUserStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SysUserVo extends BaseQuery {
+public class SysUserVo extends PageQuery {
 
     /** 用户ID */
     private Long id;

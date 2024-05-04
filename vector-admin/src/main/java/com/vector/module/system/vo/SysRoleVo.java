@@ -1,6 +1,6 @@
 package com.vector.module.system.vo;
 
-import com.vector.common.core.pagination.BaseQuery;
+import com.vector.common.core.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SysRoleVo extends BaseQuery {
+public class SysRoleVo extends PageQuery {
 
     /** 角色ID */
     private Long id;
