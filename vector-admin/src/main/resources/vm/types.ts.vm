@@ -20,16 +20,8 @@ export interface ${BizName}Query extends PageQuery {
  * 对象视图
  */
 export interface ${BizName}VO {
-  /** ID */
-  id?: number;
-  /** 创建时间 */
-  createTime?: Date;
-  /** 创建人 */
-  createBy?: string;
 #foreach ($tableField in $tableFields)
-#if($tableField.javaField != "id"
-&& $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
-&& $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+#if($tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
   /** ${tableField.comment} */
 #if($tableField.javaType == "Long" || $tableField.javaType == "Integer")
   ${tableField.javaField}?: number;

@@ -43,7 +43,19 @@ mybatis-plus:
     db-config:
       id-type: auto
 
-
+oss:
+  # OSS 类型 (目前支持aliyun、minio)
+  type: aliyun
+  # 阿里云OSS对象存储服务
+  aliyun:
+    # 服务Endpoint
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    # 访问凭据
+    access-key: access-key
+    # 凭据密钥
+    secret-key: secret-key
+    # 存储桶名称
+    bucket-name: vector
 
 logging:
   pattern:

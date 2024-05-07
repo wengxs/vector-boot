@@ -13,6 +13,9 @@ public class CurrentUserVo {
     /** 用户头像 */
     private String avatar;
 
+    /** 手机号码 */
+    private String mobile;
+
     /** 角色 */
     private Set<String> roles;
 

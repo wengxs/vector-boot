@@ -2,6 +2,9 @@ package com.vector.module.system.controller;
 
 import com.vector.common.core.constant.SecurityConstant;
 import com.vector.common.core.result.R;
+import com.vector.common.core.util.BizAssert;
+import com.vector.common.security.domain.LoginUser;
+import com.vector.common.security.service.TokenService;
 import com.vector.common.security.util.SecurityUtils;
 import com.vector.module.system.entity.SysMenu;
 import com.vector.module.system.entity.SysRole;
@@ -11,6 +14,7 @@ import com.vector.module.system.service.SysUserService;
 import com.vector.module.system.vo.CurrentUserVo;
 import com.vector.module.system.vo.RouterVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,6 +37,8 @@ public class SysCurrentController {
     private SysUserService sysUserService;
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private TokenService tokenService;
 
     @GetMapping("/profile")
     public R<CurrentUserVo> userProfile() {
@@ -40,6 +46,7 @@ public class SysCurrentController {
         CurrentUserVo currentUserVo = new CurrentUserVo();
         currentUserVo.setUsername(sysUser.getUsername());
         currentUserVo.setAvatar(sysUser.getAvatar());
+        currentUserVo.setMobile(sysUser.getMobile());
         if (SecurityConstant.ADMIN_ID.equals(sysUser.getId())) {
             currentUserVo.setRoles(Collections.singleton(SecurityConstant.ADMIN_ROLES
                     .substring(SecurityConstant.ROLE_PREFIX.length())));
@@ -56,21 +63,31 @@ public class SysCurrentController {
         return R.ok(currentUserVo);
     }
 
+    @PutMapping("/profile")
+    public R<?> updateProfile(@RequestBody Map<String, String> params) {
+        SysUser sysUser = sysUserService.getById(SecurityUtils.getUserId());
+        sysUser.setAvatar(MapUtils.getString(params, "avatar"));
+        sysUser.setMobile(MapUtils.getString(params, "mobile"));
+        sysUserService.updateById(sysUser);
+        return R.ok();
+    }
+
     @GetMapping("/menu")
     public R<List<RouterVo>> userMenu() {
         List<RouterVo> menus = sysMenuService.getRouters(SecurityUtils.getUserId());
         return R.ok(menus);
     }
 
-    @PutMapping("/updatePassword")
+    @PutMapping("/password")
     public R<?> updatePassword(@RequestBody Map<String, String> params) {
-//        LoginUser loginUser = UserUtil.getLoginUser();
-//        String oldPassword = MapUtils.getString(params, "oldPassword");
-//        Assert.isTrue(passwordEncoder.matches(oldPassword, loginUser.getPassword()), "旧密码错误");
-//        String newPassword = passwordEncoder.encode(MapUtils.getString(params, "newPassword"));
-//        sysUserService.updatePassword(loginUser.getUsername(), newPassword);
-//        loginUser.setPassword(newPassword);
-//        tokenService.refreshToken(loginUser);
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        BizAssert.notNull(loginUser, "未登录");
+        String oldPassword = MapUtils.getString(params, "oldPassword");
+        BizAssert.isTrue(passwordEncoder.matches(oldPassword, loginUser.getPassword()), "旧密码错误");
+        String newPassword = passwordEncoder.encode(MapUtils.getString(params, "newPassword"));
+        sysUserService.updatePassword(loginUser.getUsername(), newPassword);
+        loginUser.setPassword(newPassword);
+        tokenService.refreshToken(loginUser);
         return R.ok();
     }
 
