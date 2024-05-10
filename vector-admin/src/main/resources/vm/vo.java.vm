@@ -20,9 +20,6 @@ public class ${ClassName}Vo extends PageQuery {
 
     /** 创建时间 */
     private Date createTime;
-
-    /** 创建人 */
-    private String createBy;
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id"
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"

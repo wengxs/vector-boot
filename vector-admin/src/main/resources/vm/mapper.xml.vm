@@ -3,20 +3,15 @@
 <mapper namespace="${packageName}.mapper.${ClassName}Mapper">
 
     <resultMap id="${ClassName}VoResult" type="${packageName}.vo.${ClassName}Vo">
-        <result property="id" column="id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="createBy" column="create_by"/>
 #foreach ($tableField in $tableFields)
-#if($tableField.javaField != "id"
-&& $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
-&& $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
+#if($tableField.javaField != "createBy" && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
         <result property="${tableField.javaField}" column="${tableField.name}"/>
 #end
 #end
     </resultMap>
 
     <sql id="select${ClassName}VoSql">
-        SELECT p.id, p.create_time, p.create_by#foreach ($tableField in $tableFields)
+        SELECT p.id, p.create_time#foreach ($tableField in $tableFields)
 #if($tableField.javaField != "id"
 && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
 && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy"), p.${tableField.name}#end
