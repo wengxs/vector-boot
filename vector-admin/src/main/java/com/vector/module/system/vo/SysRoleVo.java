@@ -23,7 +23,7 @@ public class SysRoleVo extends PageQuery {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 角色名称 */
     private String roleName;

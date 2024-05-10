@@ -25,7 +25,7 @@ public class SysUserVo extends PageQuery {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 用户名 */
     private String username;

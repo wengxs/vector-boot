@@ -3,7 +3,6 @@ package com.vector.common.web.handler;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.vector.common.security.util.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -11,18 +10,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MyBatisMetaObjectHandler implements MetaObjectHandler {
 
-    private String getOperator() {
+    private Long getOperator() {
         try {
-            return StringUtils.defaultIfBlank(SecurityUtils.getUsername(), "");
+            return SecurityUtils.getUserId();
         } catch (Exception e){
             log.warn(e.getMessage());
         }
-        return "";
+        return 0L;
     }
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        String operator = getOperator();
+        Long operator = getOperator();
         this.setFieldValByName("createBy", operator, metaObject);
         this.setFieldValByName("updateBy", operator, metaObject);
 

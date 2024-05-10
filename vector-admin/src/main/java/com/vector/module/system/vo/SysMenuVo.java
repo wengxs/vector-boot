@@ -14,7 +14,7 @@ public class SysMenuVo {
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
     /** 菜单名称 */
     private String menuName;
     /** 父级id */
