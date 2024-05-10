@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.scm.mapper.ScmPurchaseDetailMapper">
+
+    <resultMap type="com.vector.module.scm.vo.ScmPurchaseVo$Detail" id="ScmPurchaseDetailVoResult">
+        <result property="id" column="id"/>
+        <result property="purchaseId" column="purchase_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="price" column="price"/>
+        <result property="qty" column="qty"/>
+        <result property="amount" column="amount"/>
+        <result property="receivedQty" column="received_qty"/>
+    </resultMap>
+
+    <sql id="selectScmPurchaseDetailVoSql">
+        select p.id, p.purchase_id, p.product_id, pp.product_name,
+               p.price, p.qty, p.amount, p.received_qty
+        from scm_purchase_detail p left join pms_product pp ON pp.id = p.product_id
+    </sql>
+
+    <select id="selectVoByPurchaseId" parameterType="Long" resultMap="ScmPurchaseDetailVoResult">
+        <include refid="selectScmPurchaseDetailVoSql"/>
+        where p.purchase_id=#{purchaseId}
+    </select>
+
+</mapper>

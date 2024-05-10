@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.wms.mapper.WmsReceiveMapper">
+
+    <resultMap id="WmsReceiveVoResult" type="com.vector.module.wms.vo.WmsReceiveVo">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="receiveNo" column="receive_no"/>
+        <result property="receiveStatus" column="receive_status"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="bizNo" column="biz_no"/>
+        <result property="logisticsName" column="logistics_name"/>
+        <result property="logisticsNo" column="logistics_no"/>
+        <result property="signedTime" column="signed_time"/>
+        <result property="batchNo" column="batch_no"/>
+    </resultMap>
+
+    <sql id="selectWmsReceiveVoSql">
+        select p.id, p.create_time, p.create_by, p.receive_no, p.receive_status,
+            p.biz_type, p.biz_no, p.logistics_name, p.logistics_no, p.signed_time, p.batch_no
+        from wms_receive p
+    </sql>
+
+    <select id="selectVoById" parameterType="Long"
+            resultMap="WmsReceiveVoResult">
+        <include refid="selectWmsReceiveVoSql"/>
+        where p.id=#{id}
+    </select>
+
+    <select id="selectVoPage" resultMap="WmsReceiveVoResult"
+            parameterType="com.vector.module.wms.vo.WmsReceiveVo">
+        <include refid="selectWmsReceiveVoSql"/>
+        <where>
+            <if test="q.createBegin != null and q.createEnd != null">
+                and p.create_time between DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') and DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.createBy != null and q.createBy != ''"> and p.create_by = #{q.createBy}</if>
+            <if test="q.receiveNo != null and q.receiveNo != ''"> and p.receive_no = #{q.receiveNo}</if>
+            <if test="q.receiveStatus != null "> and p.receive_status = #{q.receiveStatus}</if>
+            <if test="q.receiveNo != null and q.receiveNo != ''"> and p.receive_no = #{q.receiveNo}</if>
+            <if test="q.bizType != null and q.bizType != ''"> and p.biz_type = #{q.bizType}</if>
+            <if test="q.bizNo != null and q.bizNo != ''"> and p.biz_no = #{q.bizNo}</if>
+            <if test="q.logisticsName != null and q.logisticsName != ''"> and p.logistics_name = #{q.logisticsName}</if>
+            <if test="q.logisticsNo != null and q.logisticsNo != ''"> and p.logistics_no = #{q.logisticsNo}</if>
+            <if test="q.signedBegin != null and q.signedEnd != null">
+                and p.signed_time between DATE_FORMAT(#{q.signedBegin},'%Y-%m-%d 00:00:00') and DATE_FORMAT(#{q.signedEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.batchNo != null and q.batchNo != ''"> and p.batch_no = #{q.batchNo}</if>
+            <if test="q.productId != null">
+                and exists(select 1 from wms_receive_detail wrd where wrd.receive_id=p.id and wrd.product_id=#{q.productId})
+            </if>
+            <if test="q.productName != null and q.productName != ''">
+                and exists(select 1 from wms_receive_detail wrd left join pms_product pp on pp.id=wrd.product_id
+                where wrd.receive_id=p.id and pp.product_name like concat('%', #{q.productName}, '%'))
+            </if>
+        </where>
+        order by p.id desc
+    </select>
+
+</mapper>

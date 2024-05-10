@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.scm.mapper.ScmPurchaseMapper">
+
+    <resultMap id="ScmPurchaseVoResult" type="com.vector.module.scm.vo.ScmPurchaseVo">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="purchaseNo" column="purchase_no"/>
+        <result property="purchaseStatus" column="purchase_status"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="purchaseRemake" column="purchase_remake"/>
+    </resultMap>
+
+    <sql id="selectScmPurchaseVoSql">
+        select p.id, p.create_time, p.create_by, p.purchase_no, p.purchase_status,
+            p.supplier_id, ss.supplier_name, p.purchase_remake
+        from scm_purchase p left join scm_supplier ss ON ss.id = p.supplier_id
+    </sql>
+
+    <select id="selectVoById" parameterType="Long"
+            resultMap="ScmPurchaseVoResult">
+        <include refid="selectScmPurchaseVoSql"/>
+        where p.id=#{id}
+    </select>
+
+    <select id="selectVoPage" resultMap="ScmPurchaseVoResult"
+            parameterType="com.vector.module.scm.vo.ScmPurchaseVo">
+        <include refid="selectScmPurchaseVoSql"/>
+        <where>
+            <if test="q.createBy != null and q.createBy != ''"> and p.create_by = #{q.createBy}</if>
+            <if test="q.purchaseNo != null and q.purchaseNo != ''"> and p.purchase_no = #{q.purchaseNo}</if>
+            <if test="q.purchaseStatus != null "> and p.purchase_status = #{q.purchaseStatus}</if>
+            <if test="q.supplierId != null "> and p.supplier_id = #{q.supplierId}</if>
+            <if test="q.supplierName != null and q.supplierName != ''"> and ss.supplier_name like concat('%', #{q.supplierName}, '%')</if>
+            <if test="q.createBegin != null and q.createEnd != null">
+                and p.create_time between DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') and DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.productId != null">
+                and exists(select 1 from scm_purchase_detail pd where pd.purchase_id=p.id and pd.product_id=#{q.productId})
+            </if>
+            <if test="q.productName != null and q.productName != ''">
+                and exists(select 1 from scm_purchase_detail pd left join pms_product pp on pp.id=pd.product_id
+                where pd.purchase_id=p.id and pp.name like concat('%', #{q.productName}, '%'))
+            </if>
+        </where>
+        order by p.id desc
+    </select>
+
+</mapper>

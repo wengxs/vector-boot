@@ -33,6 +33,25 @@ spring:
           max-active: 100
           # 连接分配应该阻塞的最大时间
           max-wait: 2000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1 # 每个使用者可以处理的未确认消息的最大数量。
+        retry:
+          enabled: true # 开启消费失败重试
+          max-attempts: 3 # 最大重试次数
+          initial-interval: 1000ms # 第一次和第二次尝试传递消息之间的持续时间
+          multiplier: 1 # 应用于上一次重试间隔的乘数。
+          max-interval: 10000ms # 两次尝试之间的最长持续时间
+          stateless: true # 重试是无状态的还是有状态的。有事务选false
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.vector.*.entity
@@ -46,16 +65,28 @@ mybatis-plus:
 oss:
   # OSS 类型 (目前支持aliyun、minio)
   type: aliyun
+  # MinIO 对象存储服务
+  minio:
+    # 服务Endpoint
+    endpoint: http://localhost:11111
+    # 访问凭据
+    access-key: minioadmin
+    # 凭据密钥
+    secret-key: minioadmin
+    # 存储桶名称
+    bucket-name: default
+    # (可选)自定义域名，如果配置了域名，生成的文件URL是域名格式，未配置则URL则是IP格式 (eg: https://oss.youlai.tech)
+    custom-domain:
   # 阿里云OSS对象存储服务
   aliyun:
     # 服务Endpoint
-    endpoint: oss-cn-hangzhou.aliyuncs.com
+    endpoint: oss-cn-shenzhen.aliyuncs.com
     # 访问凭据
-    access-key: access-key
+    access-key: LTAI5t7ChBvJhp1tjiCK38s6
     # 凭据密钥
-    secret-key: secret-key
+    secret-key: ONseP2jZxQ1K1JY3juJFyu4yWd61Nw
     # 存储桶名称
-    bucket-name: vector
+    bucket-name: wengxs
 
 logging:
   pattern:

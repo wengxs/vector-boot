@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.pms.mapper.PmsProductMapper">
+
+    <resultMap id="PmsProductVoResult" type="com.vector.module.pms.vo.PmsProductVo">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="productName" column="product_name"/>
+        <result property="factory" column="factory"/>
+    </resultMap>
+
+    <sql id="selectPmsProductVoSql">
+        SELECT p.id, p.create_time, p.create_by, p.product_name, p.factory
+        FROM pms_product p
+    </sql>
+
+    <select id="selectVoById" resultMap="PmsProductVoResult" parameterType="Long">
+        <include refid="selectPmsProductVoSql"/>
+        WHERE p.id=#{id}
+    </select>
+
+    <select id="selectVoPage" resultMap="PmsProductVoResult"
+            parameterType="com.vector.module.pms.vo.PmsProductVo">
+        <include refid="selectPmsProductVoSql"/>
+        <where>
+            <if test="q.createBegin != null and q.createEnd != null">
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.createBy != null and q.createBy != ''">
+                AND p.create_by = #{q.createBy}
+            </if>
+            <if test="q.productName != null and q.productName != ''">
+                AND p.product_name LIKE concat('%', #{q.productName}, '%')
+            </if>
+            <if test="q.factory != null and q.factory != ''">
+                AND p.factory LIKE concat('%', #{q.factory}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
