@@ -23,7 +23,7 @@ public class WmsReceiveVo {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 收货单号 */
     private String receiveNo;

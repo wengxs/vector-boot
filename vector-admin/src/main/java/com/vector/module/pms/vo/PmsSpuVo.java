@@ -24,7 +24,7 @@ public class PmsSpuVo extends PageQuery {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 商品标题 */
     private String spuName;

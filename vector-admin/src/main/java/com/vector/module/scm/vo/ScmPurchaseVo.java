@@ -20,7 +20,7 @@ public class ScmPurchaseVo {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 采购单号 */
     private String purchaseNo;

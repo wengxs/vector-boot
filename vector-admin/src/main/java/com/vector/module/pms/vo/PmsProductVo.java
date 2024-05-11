@@ -22,7 +22,7 @@ public class PmsProductVo extends PageQuery {
     private Date createTime;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /** 产品名称 */
     private String productName;
