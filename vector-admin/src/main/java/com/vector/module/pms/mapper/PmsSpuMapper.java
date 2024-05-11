@@ -2,8 +2,9 @@ package com.vector.module.pms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.vector.module.pms.entity.PmsSpu;
-import com.vector.module.pms.vo.PmsSpuVo;
+import com.vector.module.pms.pojo.entity.PmsSpu;
+import com.vector.module.pms.pojo.query.PmsSpuQuery;
+import com.vector.module.pms.pojo.vo.PmsSpuVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface PmsSpuMapper extends BaseMapper<PmsSpu> {
 
-    PmsSpuVo selectVoById(Long id);
+    PmsSpuVO selectVOById(Long id);
 
-    IPage<PmsSpuVo> selectVoPage(@Param("page") IPage<?> page, @Param("q") PmsSpuVo query);
+    IPage<PmsSpuVO> selectVOPage(@Param("page") IPage<?> page, @Param("q") PmsSpuQuery query);
 }

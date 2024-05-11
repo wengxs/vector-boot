@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import com.vector.module.pms.dto.PmsProductDto;
-import com.vector.module.pms.entity.PmsProduct;
+import com.vector.module.pms.pojo.dto.PmsProductDTO;
+import com.vector.module.pms.pojo.entity.PmsProduct;
+import com.vector.module.pms.pojo.query.PmsProductQuery;
 import com.vector.module.pms.service.PmsProductService;
-import com.vector.module.pms.vo.PmsProductVo;
+import com.vector.module.pms.pojo.vo.PmsProductVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,28 +28,28 @@ public class PmsProductController {
     private PmsProductService pmsProductService;
 
     @GetMapping("/list")
-    public R<PageResult> list(PmsProductVo query) {
-        IPage<PmsProductVo> page = pmsProductService.pageVo(Pageable.getPage(query), query);
+    public R<PageResult> list(PmsProductQuery query) {
+        IPage<PmsProductVO> page = pmsProductService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
-    public R<PmsProductVo> get(@PathVariable Long id) {
-        return R.ok(pmsProductService.getVoById(id));
+    public R<PmsProductVO> get(@PathVariable Long id) {
+        return R.ok(pmsProductService.getVOById(id));
     }
 
     @PostMapping
-    public R<?> add(@RequestBody PmsProductDto productDto) {
+    public R<?> add(@RequestBody PmsProductDTO productDTO) {
         PmsProduct pmsProduct = new PmsProduct();
-        BeanUtils.copyProperties(productDto, pmsProduct);
+        BeanUtils.copyProperties(productDTO, pmsProduct);
         pmsProductService.save(pmsProduct);
         return R.ok();
     }
 
     @PutMapping
-    public R<?> update(@RequestBody PmsProductDto productDto) {
+    public R<?> update(@RequestBody PmsProductDTO productDTO) {
         PmsProduct pmsProduct = new PmsProduct();
-        BeanUtils.copyProperties(productDto, pmsProduct);
+        BeanUtils.copyProperties(productDTO, pmsProduct);
         pmsProductService.updateById(pmsProduct);
         return R.ok();
     }

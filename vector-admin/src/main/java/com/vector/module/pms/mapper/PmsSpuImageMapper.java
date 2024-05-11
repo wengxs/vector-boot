@@ -1,7 +1,7 @@
 package com.vector.module.pms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.vector.module.pms.entity.PmsSpuImage;
+import com.vector.module.pms.pojo.entity.PmsSpuImage;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

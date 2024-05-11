@@ -7,14 +7,15 @@ import com.vector.common.core.util.BizAssert;
 import com.vector.common.core.util.OrderNoGenerator;
 import com.vector.common.mq.constant.RabbitMqConstant;
 import com.vector.module.wms.constant.WmsConstant;
-import com.vector.module.wms.entity.*;
 import com.vector.module.wms.enums.BizType;
 import com.vector.module.wms.enums.WmsReceiveStatus;
-import com.vector.module.wms.dto.WmsCheckDto;
-import com.vector.module.wms.dto.WmsReceiveDto;
-import com.vector.module.wms.mapper.*;
+import com.vector.module.wms.mapper.WmsReceiveMapper;
+import com.vector.module.wms.pojo.dto.WmsCheckDTO;
+import com.vector.module.wms.pojo.dto.WmsReceiveDTO;
+import com.vector.module.wms.pojo.entity.*;
+import com.vector.module.wms.pojo.query.WmsReceiveQuery;
+import com.vector.module.wms.pojo.vo.WmsReceiveVO;
 import com.vector.module.wms.service.*;
-import com.vector.module.wms.vo.WmsReceiveVo;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,28 +41,28 @@ public class WmsReceiveServiceImpl extends ServiceImpl<WmsReceiveMapper, WmsRece
     private WmsProductBatchService wmsProductBatchService;
 
     @Override
-    public WmsReceiveVo getVoById(Long id) {
-        WmsReceiveVo vo = baseMapper.selectVoById(id);
+    public WmsReceiveVO getVOById(Long id) {
+        WmsReceiveVO vo = baseMapper.selectVOById(id);
         if (vo != null)
-            vo.setDetails(wmsReceiveDetailService.listVoByReceiveId(id));
+            vo.setDetails(wmsReceiveDetailService.listVOByReceiveId(id));
         return vo;
     }
 
     @Override
-    public IPage<WmsReceiveVo> pageVo(IPage<?> page, WmsReceiveVo query) {
-        return baseMapper.selectVoPage(page, query);
+    public IPage<WmsReceiveVO> pageVO(IPage<?> page, WmsReceiveQuery query) {
+        return baseMapper.selectVOPage(page, query);
     }
 
     @Override
     @Transactional
-    public void create(WmsReceiveDto receiveForm) {
+    public void create(WmsReceiveDTO receiveForm) {
         WmsReceive receive = new WmsReceive();
         receive.setReceiveNo(orderNoGenerator.generate(WmsConstant.NUMBER_PREFIX_RECEIVE));
         receive.setReceiveStatus(WmsReceiveStatus.UNSENT);
         receive.setBizType(receiveForm.getBizType());
         receive.setBizNo(receiveForm.getBizNo());
         baseMapper.insert(receive);
-        for (WmsReceiveDto.Detail detail : receiveForm.getDetails()) {
+        for (WmsReceiveDTO.Detail detail : receiveForm.getDetails()) {
             WmsReceiveDetail receiveDetail = new WmsReceiveDetail();
             receiveDetail.setReceiveId(receive.getId());
             receiveDetail.setProductId(detail.getProductId());
@@ -92,7 +93,7 @@ public class WmsReceiveServiceImpl extends ServiceImpl<WmsReceiveMapper, WmsRece
 
     @Override
     @Transactional
-    public void check(WmsCheckDto checkForm) {
+    public void check(WmsCheckDTO checkForm) {
         WmsReceive receive = baseMapper.selectById(checkForm.getId());
         BizAssert.notNull(receive, "收货单不存在");
         BizAssert.isTrue(WmsReceiveStatus.SIGNED.equals(receive.getReceiveStatus()),
@@ -106,7 +107,7 @@ public class WmsReceiveServiceImpl extends ServiceImpl<WmsReceiveMapper, WmsRece
                         .eq(WmsReceiveDetail::getReceiveId, receive.getId())
         );
         // 验收入库
-        for (WmsCheckDto.Detail detail : checkForm.getDetails()) {
+        for (WmsCheckDTO.Detail detail : checkForm.getDetails()) {
             Long productId = detail.getProductId();
             // 增加批号库存
             WmsProductLot productLot = wmsProductLotService.getOne(
@@ -187,10 +188,10 @@ public class WmsReceiveServiceImpl extends ServiceImpl<WmsReceiveMapper, WmsRece
         for (WmsReceiveDetail receiveDetail : receiveDetails) {
             int qualifiedQty = checkForm.getDetails().stream()
                     .filter(item -> item.getProductId().equals(receiveDetail.getProductId()))
-                    .mapToInt(WmsCheckDto.Detail::getQualifiedQty).sum();
+                    .mapToInt(WmsCheckDTO.Detail::getQualifiedQty).sum();
             int unqualifiedQty = checkForm.getDetails().stream()
                     .filter(item -> item.getProductId().equals(receiveDetail.getProductId()))
-                    .mapToInt(WmsCheckDto.Detail::getUnqualifiedQty).sum();
+                    .mapToInt(WmsCheckDTO.Detail::getUnqualifiedQty).sum();
             receiveDetail.setReceivedQty(qualifiedQty + unqualifiedQty);
             receiveDetail.setQualifiedQty(qualifiedQty);
             receiveDetail.setUnqualifiedQty(unqualifiedQty);

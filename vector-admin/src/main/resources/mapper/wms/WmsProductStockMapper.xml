@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.vector.module.wms.mapper.WmsProductStockMapper">
 
-    <resultMap type="com.vector.module.wms.vo.WmsProductStockVo" id="WmsProductStockVoResult">
+    <resultMap type="com.vector.module.wms.pojo.vo.WmsProductStockVO" id="WmsProductStockVOResult">
         <result property="id" column="id"/>
         <result property="productId" column="product_id"/>
         <result property="productName" column="product_name"/>
@@ -12,25 +12,30 @@
         <result property="lockedStock" column="locked_stock"/>
     </resultMap>
 
-    <sql id="selectWmsProductStockVoSql">
-        select p.id, p.product_id, pp.product_name, pp.factory,
+    <sql id="selectWmsProductStockVOSql">
+        SELECT p.id, p.product_id, pp.product_name, pp.factory,
                p.total_stock, p.usable_stock, p.locked_stock
-        from wms_product_stock p left join pms_product pp ON pp.id = p.product_id
+        FROM wms_product_stock p LEFT JOIN pms_product pp ON pp.id = p.product_id
     </sql>
 
-    <select id="selectVoById"  parameterType="Long" resultMap="WmsProductStockVoResult">
-        <include refid="selectWmsProductStockVoSql"/>
-        where p.id=#{id}
+    <select id="selectVOById"  parameterType="Long" resultMap="WmsProductStockVOResult">
+        <include refid="selectWmsProductStockVOSql"/>
+        WHERE p.id = #{id}
     </select>
 
-    <select id="selectVoPage" resultMap="WmsProductStockVoResult"
-            parameterType="com.vector.module.wms.vo.WmsProductStockVo">
-        <include refid="selectWmsProductStockVoSql"/>
+    <select id="selectVOPage" resultMap="WmsProductStockVOResult"
+            parameterType="com.vector.module.wms.pojo.query.WmsProductStockQuery">
+        <include refid="selectWmsProductStockVOSql"/>
         <where>
-            <if test="q.productId != null"> and p.product_id = #{q.id}</if>
-            <if test="q.productName != null and q.productName != ''"> and pp.product_name like concat('%', #{q.productName}, '%')</if>
-            <if test="q.factory != null and q.factory != ''"> and pp.factory like concat('%', #{q.factory}, '%')</if>
+            <if test="q.productId != null">
+                AND p.product_id = #{q.productId}
+            </if>
+            <if test="q.productName != null and q.productName != ''">
+                AND pp.product_name LIKE CONCAT('%', #{q.productName}, '%')
+            </if>
+            <if test="q.factory != null and q.factory != ''">
+                AND pp.factory LIKE CONCAT('%', #{q.factory}, '%')
+            </if>
         </where>
-        order by p.id desc
     </select>
 </mapper>

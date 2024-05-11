@@ -1,7 +1,7 @@
 package com.vector.module.pms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.pms.entity.PmsSpuImage;
+import com.vector.module.pms.pojo.entity.PmsSpuImage;
 
 /**
  * 商品图片 Service

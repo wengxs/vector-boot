@@ -1,18 +1,17 @@
 package com.vector.module.scm.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import com.vector.module.scm.entity.ScmSupplier;
+import com.vector.module.scm.pojo.entity.ScmSupplier;
+import com.vector.module.scm.pojo.query.ScmSupplierQuery;
+import com.vector.module.scm.pojo.vo.ScmSupplierVO;
 import com.vector.module.scm.service.ScmSupplierService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/scm/supplier")
@@ -22,18 +21,14 @@ public class ScmSupplierController {
     private ScmSupplierService scmSupplierService;
 
     @GetMapping("/list")
-    public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        ScmSupplier query = Pageable.getQuery(params, ScmSupplier.class);
-        IPage<ScmSupplier> page = scmSupplierService.page(Pageable.getPage(params), new LambdaQueryWrapper<>(ScmSupplier.class)
-                .like(StringUtils.isNotBlank(query.getSupplierName()), ScmSupplier::getSupplierName, query.getSupplierName())
-                .like(StringUtils.isNotBlank(query.getProvince()), ScmSupplier::getProvince, query.getProvince())
-        );
+    public R<PageResult> list(ScmSupplierQuery query) {
+        IPage<ScmSupplierVO> page = scmSupplierService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
-    public R<ScmSupplier> get(@PathVariable Long id) {
-        return R.ok(scmSupplierService.getById(id));
+    public R<ScmSupplierVO> get(@PathVariable Long id) {
+        return R.ok(scmSupplierService.getVOById(id));
     }
 
     @PostMapping

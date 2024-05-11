@@ -2,21 +2,22 @@ package com.vector.module.wms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.wms.entity.WmsProductStock;
-import com.vector.module.wms.dto.WmsProductStockLockDto;
-import com.vector.module.wms.vo.WmsProductStockVo;
+import com.vector.module.wms.pojo.entity.WmsProductStock;
+import com.vector.module.wms.pojo.dto.WmsProductStockLockDTO;
+import com.vector.module.wms.pojo.query.WmsProductStockQuery;
+import com.vector.module.wms.pojo.vo.WmsProductStockVO;
 
 public interface WmsProductStockService extends IService<WmsProductStock> {
 
-    WmsProductStockVo getVoById(Long id);
+    WmsProductStockVO getVOById(Long id);
 
-    IPage<WmsProductStockVo> pageVo(IPage<?> page, WmsProductStockVo query);
+    IPage<WmsProductStockVO> pageVO(IPage<?> page, WmsProductStockQuery query);
 
     /**
      * 锁定库存
-     * @param lockDto
+     * @param lockDTO
      */
-    void lock(WmsProductStockLockDto lockDto);
+    void lock(WmsProductStockLockDTO lockDTO);
 
     /**
      * 锁定库存
@@ -27,9 +28,9 @@ public interface WmsProductStockService extends IService<WmsProductStock> {
 
     /**
      * 释放库存
-     * @param lockDto
+     * @param lockDTO
      */
-    void unlock(WmsProductStockLockDto lockDto);
+    void unlock(WmsProductStockLockDTO lockDTO);
 
     /**
      * 释放库存

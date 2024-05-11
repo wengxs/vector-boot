@@ -2,10 +2,11 @@ package com.vector.module.pms.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.vector.module.pms.entity.PmsProduct;
+import com.vector.module.pms.pojo.entity.PmsProduct;
 import com.vector.module.pms.mapper.PmsProductMapper;
+import com.vector.module.pms.pojo.query.PmsProductQuery;
 import com.vector.module.pms.service.PmsProductService;
-import com.vector.module.pms.vo.PmsProductVo;
+import com.vector.module.pms.pojo.vo.PmsProductVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,12 +19,12 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         implements PmsProductService {
 
     @Override
-    public PmsProductVo getVoById(Long id) {
-        return baseMapper.selectVoById(id);
+    public PmsProductVO getVOById(Long id) {
+        return baseMapper.selectVOById(id);
     }
 
     @Override
-    public IPage<PmsProductVo> pageVo(IPage<?> page, PmsProductVo query) {
-        return baseMapper.selectVoPage(page, query);
+    public IPage<PmsProductVO> pageVO(IPage<?> page, PmsProductQuery query) {
+        return baseMapper.selectVOPage(page, query);
     }
 }

@@ -7,16 +7,17 @@ import com.vector.common.core.util.BizAssert;
 import com.vector.common.core.util.OrderNoGenerator;
 import com.vector.common.mq.constant.RabbitMqConstant;
 import com.vector.module.scm.constant.ScmConstant;
-import com.vector.module.scm.dto.ScmPurchaseDto;
-import com.vector.module.scm.entity.ScmPurchase;
-import com.vector.module.scm.entity.ScmPurchaseDetail;
 import com.vector.module.scm.enums.ScmPurchaseStatus;
 import com.vector.module.scm.mapper.ScmPurchaseMapper;
+import com.vector.module.scm.pojo.dto.ScmPurchaseDTO;
+import com.vector.module.scm.pojo.entity.ScmPurchase;
+import com.vector.module.scm.pojo.entity.ScmPurchaseDetail;
+import com.vector.module.scm.pojo.query.ScmPurchaseQuery;
+import com.vector.module.scm.pojo.vo.ScmPurchaseVO;
 import com.vector.module.scm.service.ScmPurchaseDetailService;
 import com.vector.module.scm.service.ScmPurchaseService;
-import com.vector.module.scm.vo.ScmPurchaseVo;
 import com.vector.module.wms.enums.BizType;
-import com.vector.module.wms.dto.WmsReceiveDto;
+import com.vector.module.wms.pojo.dto.WmsReceiveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPurchase> implements ScmPurchaseService {
+public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPurchase> 
+        implements ScmPurchaseService {
 
     @Autowired
     private OrderNoGenerator orderNoGenerator;
@@ -38,20 +40,20 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
     private RabbitTemplate rabbitTemplate;
 
     @Override
-    public ScmPurchaseVo getVoById(Long id) {
-        ScmPurchaseVo vo = baseMapper.selectVoById(id);
+    public ScmPurchaseVO getVOById(Long id) {
+        ScmPurchaseVO vo = baseMapper.selectVOById(id);
         if (vo != null)
-            vo.setDetails(scmPurchaseDetailService.listVoByPurchaseId(id));
+            vo.setDetails(scmPurchaseDetailService.listVOByPurchaseId(id));
         return vo;
     }
 
     @Override
-    public IPage<ScmPurchaseVo> pageVo(IPage<?> page, ScmPurchaseVo query) {
-        return baseMapper.selectVoPage(page, query);
+    public IPage<ScmPurchaseVO> pageVO(IPage<?> page, ScmPurchaseQuery query) {
+        return baseMapper.selectVOPage(page, query);
     }
 
-    private void handleDetail(List<ScmPurchaseDto.Detail> details, Long purchaseId) {
-        for (ScmPurchaseDto.Detail detail : details) {
+    private void handleDetail(List<ScmPurchaseDTO.Detail> details, Long purchaseId) {
+        for (ScmPurchaseDTO.Detail detail : details) {
             ScmPurchaseDetail purchaseDetail = new ScmPurchaseDetail();
             purchaseDetail.setPurchaseId(purchaseId);
             purchaseDetail.setProductId(detail.getProductId());
@@ -64,29 +66,29 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
 
     @Override
     @Transactional
-    public void create(ScmPurchaseDto purchaseDto) {
+    public void create(ScmPurchaseDTO purchaseDTO) {
         ScmPurchase purchase = new ScmPurchase();
         purchase.setPurchaseNo(orderNoGenerator.generate(ScmConstant.NUMBER_PREFIX_ORDER));
         purchase.setPurchaseStatus(ScmPurchaseStatus.DRAFT);
-        purchase.setSupplierId(purchaseDto.getSupplierId());
-        purchase.setPurchaseRemake(purchaseDto.getPurchaseRemake());
-        BigDecimal amount = purchaseDto.getDetails().stream()
+        purchase.setSupplierId(purchaseDTO.getSupplierId());
+        purchase.setPurchaseRemake(purchaseDTO.getPurchaseRemake());
+        BigDecimal amount = purchaseDTO.getDetails().stream()
                 .map(detail -> detail.getPrice().multiply(BigDecimal.valueOf(detail.getQty())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         purchase.setAmount(amount);
         baseMapper.insert(purchase);
-        handleDetail(purchaseDto.getDetails(), purchase.getId());
+        handleDetail(purchaseDTO.getDetails(), purchase.getId());
     }
 
     @Override
     @Transactional
-    public void updateById(ScmPurchaseDto purchaseDto) {
-        ScmPurchase purchase = baseMapper.selectById(purchaseDto.getId());
+    public void updateById(ScmPurchaseDTO purchaseDTO) {
+        ScmPurchase purchase = baseMapper.selectById(purchaseDTO.getId());
         BizAssert.notNull(purchase, "采购单不存在");
         BizAssert.isTrue(ScmPurchaseStatus.DRAFT.equals(purchase.getPurchaseStatus()), "该状态的采购单不可以修改");
-        purchase.setSupplierId(purchaseDto.getSupplierId());
-        purchase.setPurchaseRemake(purchaseDto.getPurchaseRemake());
-        BigDecimal amount = purchaseDto.getDetails().stream()
+        purchase.setSupplierId(purchaseDTO.getSupplierId());
+        purchase.setPurchaseRemake(purchaseDTO.getPurchaseRemake());
+        BigDecimal amount = purchaseDTO.getDetails().stream()
                 .map(detail -> detail.getPrice().multiply(BigDecimal.valueOf(detail.getQty())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         purchase.setAmount(amount);
@@ -94,7 +96,7 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
         // 清除明细
         scmPurchaseDetailService.remove(new LambdaQueryWrapper<>(ScmPurchaseDetail.class)
                 .eq(ScmPurchaseDetail::getPurchaseId, purchase.getId()));
-        handleDetail(purchaseDto.getDetails(), purchase.getId());
+        handleDetail(purchaseDTO.getDetails(), purchase.getId());
     }
 
     @Override
@@ -124,11 +126,11 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
                 new LambdaQueryWrapper<>(ScmPurchaseDetail.class).eq(ScmPurchaseDetail::getPurchaseId, id));
         BizAssert.notEmpty(details, "订单无采购明细");
         // 构建收货表单
-        WmsReceiveDto form = new WmsReceiveDto();
+        WmsReceiveDTO form = new WmsReceiveDTO();
         form.setBizType(BizType.PURCHASE);
         form.setBizNo(purchase.getPurchaseNo());
         form.setDetails(details.stream().map(purchaseDetail -> {
-            WmsReceiveDto.Detail detail = new WmsReceiveDto.Detail();
+            WmsReceiveDTO.Detail detail = new WmsReceiveDTO.Detail();
             detail.setProductId(purchaseDetail.getProductId());
             detail.setQty(purchaseDetail.getQty());
             return detail;

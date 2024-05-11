@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.util.BizAssert;
 import com.vector.module.wms.constant.WmsConstant;
-import com.vector.module.wms.entity.WmsProductStock;
-import com.vector.module.wms.dto.WmsProductStockLockDto;
 import com.vector.module.wms.mapper.WmsProductStockMapper;
+import com.vector.module.wms.pojo.entity.WmsProductStock;
+import com.vector.module.wms.pojo.dto.WmsProductStockLockDTO;
+import com.vector.module.wms.pojo.query.WmsProductStockQuery;
+import com.vector.module.wms.pojo.vo.WmsProductStockVO;
 import com.vector.module.wms.service.WmsProductStockService;
-import com.vector.module.wms.vo.WmsProductStockVo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,19 @@ public class WmsProductStockServiceImpl extends ServiceImpl<WmsProductStockMappe
     private RedissonClient redissonClient;
 
     @Override
-    public WmsProductStockVo getVoById(Long id) {
-        return baseMapper.selectVoById(id);
+    public WmsProductStockVO getVOById(Long id) {
+        return baseMapper.selectVOById(id);
     }
 
     @Override
-    public IPage<WmsProductStockVo> pageVo(IPage<?> page, WmsProductStockVo query) {
-        return baseMapper.selectVoPage(page, query);
+    public IPage<WmsProductStockVO> pageVO(IPage<?> page, WmsProductStockQuery query) {
+        return baseMapper.selectVOPage(page, query);
     }
 
     @Override
     @Transactional
-    public void lock(WmsProductStockLockDto lockDto) {
-        for (WmsProductStockLockDto.Detail detail : lockDto.getDetails()) {
+    public void lock(WmsProductStockLockDTO lockDTO) {
+        for (WmsProductStockLockDTO.Detail detail : lockDTO.getDetails()) {
             this.lock(detail.getProductId(), detail.getQty());
         }
     }
@@ -57,8 +58,8 @@ public class WmsProductStockServiceImpl extends ServiceImpl<WmsProductStockMappe
 
     @Override
     @Transactional
-    public void unlock(WmsProductStockLockDto lockDto) {
-        for (WmsProductStockLockDto.Detail detail : lockDto.getDetails()) {
+    public void unlock(WmsProductStockLockDTO lockDTO) {
+        for (WmsProductStockLockDTO.Detail detail : lockDTO.getDetails()) {
             this.unlock(detail.getProductId(), detail.getQty());
         }
     }

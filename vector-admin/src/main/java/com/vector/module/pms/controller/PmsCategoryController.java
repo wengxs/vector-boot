@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import com.vector.module.pms.entity.PmsCategory;
+import com.vector.module.pms.pojo.entity.PmsCategory;
 import com.vector.module.pms.service.PmsCategoryService;
-import com.vector.module.pms.vo.PmsCategoryTreeVo;
+import com.vector.module.pms.pojo.vo.PmsCategoryTreeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -36,12 +36,12 @@ public class PmsCategoryController {
     }
 
     @GetMapping("/tree")
-    public R<List<PmsCategoryTreeVo>> tree(PmsCategoryTreeVo params) {
-        List<PmsCategoryTreeVo> list = pmsCategoryService.tree();
+    public R<List<PmsCategoryTreeVO>> tree(PmsCategoryTreeVO params) {
+        List<PmsCategoryTreeVO> list = pmsCategoryService.tree();
         return R.ok(filterQuery(list, params));
     }
 
-    private List<PmsCategoryTreeVo> filterQuery(List<PmsCategoryTreeVo> list, PmsCategoryTreeVo params) {
+    private List<PmsCategoryTreeVO> filterQuery(List<PmsCategoryTreeVO> list, PmsCategoryTreeVO params) {
         return list.stream().filter(item -> {
             if (StringUtils.isNotBlank(params.getCategoryName())
                     && item.getCategoryName().contains(params.getCategoryName())) {

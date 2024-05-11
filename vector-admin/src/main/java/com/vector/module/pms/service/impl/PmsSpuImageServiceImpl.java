@@ -1,7 +1,7 @@
 package com.vector.module.pms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.vector.module.pms.entity.PmsSpuImage;
+import com.vector.module.pms.pojo.entity.PmsSpuImage;
 import com.vector.module.pms.mapper.PmsSpuImageMapper;
 import com.vector.module.pms.service.PmsSpuImageService;
 import org.springframework.stereotype.Service;

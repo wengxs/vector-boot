@@ -1,7 +1,7 @@
 package com.vector.module.wms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.vector.module.wms.entity.WmsProductLot;
+import com.vector.module.wms.pojo.entity.WmsProductLot;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

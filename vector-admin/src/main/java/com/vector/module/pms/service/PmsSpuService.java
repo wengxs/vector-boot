@@ -2,9 +2,10 @@ package com.vector.module.pms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.pms.dto.PmsSpuDto;
-import com.vector.module.pms.entity.PmsSpu;
-import com.vector.module.pms.vo.PmsSpuVo;
+import com.vector.module.pms.pojo.dto.PmsSpuDTO;
+import com.vector.module.pms.pojo.entity.PmsSpu;
+import com.vector.module.pms.pojo.query.PmsSpuQuery;
+import com.vector.module.pms.pojo.vo.PmsSpuVO;
 
 /**
  * 商品信息 Service
@@ -13,13 +14,13 @@ import com.vector.module.pms.vo.PmsSpuVo;
  */
 public interface PmsSpuService extends IService<PmsSpu> {
 
-    PmsSpuVo getVoById(Long id);
+    PmsSpuVO getVOById(Long id);
 
-    IPage<PmsSpuVo> pageVo(IPage<?> page, PmsSpuVo query);
+    IPage<PmsSpuVO> pageVO(IPage<?> page, PmsSpuQuery query);
 
-    void saveSpu(PmsSpuDto spuDto);
+    void saveSpu(PmsSpuDTO spuDTO);
 
-    void updateSpu(PmsSpuDto spuDto);
+    void updateSpu(PmsSpuDTO spuDTO);
 
     void removeDraftById(Long id);
 }

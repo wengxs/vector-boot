@@ -1,18 +1,16 @@
 package com.vector.module.wms.controller;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import com.vector.module.wms.dto.WmsCheckDto;
-import com.vector.module.wms.dto.WmsReceiveDto;
+import com.vector.module.wms.pojo.dto.WmsCheckDTO;
+import com.vector.module.wms.pojo.dto.WmsReceiveDTO;
+import com.vector.module.wms.pojo.query.WmsReceiveQuery;
 import com.vector.module.wms.service.WmsReceiveService;
-import com.vector.module.wms.vo.WmsReceiveVo;
+import com.vector.module.wms.pojo.vo.WmsReceiveVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/wms/receive")
@@ -22,20 +20,19 @@ public class WmsReceiveController {
     private WmsReceiveService wmsReceiveService;
 
     @GetMapping("/list")
-    public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        WmsReceiveVo query = Pageable.getQuery(params, WmsReceiveVo.class);
-        IPage<WmsReceiveVo> page = wmsReceiveService.pageVo(Pageable.getPage(params), query);
+    public R<PageResult> list(WmsReceiveQuery query) {
+        IPage<WmsReceiveVO> page = wmsReceiveService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
-    public R<WmsReceiveVo> get(@PathVariable Long id) {
-        return R.ok(wmsReceiveService.getVoById(id));
+    public R<WmsReceiveVO> get(@PathVariable Long id) {
+        return R.ok(wmsReceiveService.getVOById(id));
     }
 
     @PostMapping()
-    public R<?> add(@RequestBody WmsReceiveDto receiveDto) {
-        wmsReceiveService.create(receiveDto);
+    public R<?> add(@RequestBody WmsReceiveDTO receiveDTO) {
+        wmsReceiveService.create(receiveDTO);
         return R.ok();
     }
 
@@ -46,8 +43,8 @@ public class WmsReceiveController {
     }
 
     @PutMapping("/check")
-    public R<?> check(@RequestBody WmsCheckDto checkDto) {
-        wmsReceiveService.check(checkDto);
+    public R<?> check(@RequestBody WmsCheckDTO checkDTO) {
+        wmsReceiveService.check(checkDTO);
         return R.ok();
     }
 

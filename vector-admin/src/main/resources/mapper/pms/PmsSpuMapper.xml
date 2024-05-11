@@ -2,10 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.vector.module.pms.mapper.PmsSpuMapper">
 
-    <resultMap id="PmsSpuVoResult" type="com.vector.module.pms.vo.PmsSpuVo">
+    <resultMap id="PmsSpuVOResult" type="com.vector.module.pms.pojo.vo.PmsSpuVO">
         <result property="id" column="id"/>
         <result property="createTime" column="create_time"/>
-        <result property="createBy" column="create_by"/>
         <result property="spuName" column="spu_name"/>
         <result property="spuStatus" column="spu_status"/>
         <result property="defaultImage" column="default_image"/>
@@ -18,37 +17,38 @@
         <result property="rejectReason" column="reject_reason"/>
     </resultMap>
 
-    <sql id="selectPmsSpuVoSql">
+    <sql id="selectPmsSpuVOSql">
         SELECT p.id, p.create_time, p.create_by, p.spu_name, p.spu_status, p.default_image,
                p.category_id, pc.category_name, p.sale_count, p.approve_time, p.on_time,
                p.off_time, p.reject_reason
         FROM pms_spu p
-        LEFT JOIN pms_category pc ON pc.id=p.id
+        LEFT JOIN pms_category pc ON pc.id = p.id
     </sql>
 
-    <select id="selectVoById" resultMap="PmsSpuVoResult" parameterType="Long">
-        <include refid="selectPmsSpuVoSql"/>
-        WHERE p.id=#{id}
+    <select id="selectVOById" resultMap="PmsSpuVOResult" parameterType="Long">
+        <include refid="selectPmsSpuVOSql"/>
+        WHERE p.id = #{id}
     </select>
 
-    <select id="selectVoPage" resultMap="PmsSpuVoResult"
-            parameterType="com.vector.module.pms.vo.PmsSpuVo">
-        <include refid="selectPmsSpuVoSql"/>
+    <select id="selectVOPage" resultMap="PmsSpuVOResult"
+            parameterType="com.vector.module.pms.pojo.query.PmsSpuQuery">
+        <include refid="selectPmsSpuVOSql"/>
         <where>
             <if test="q.createBegin != null and q.createEnd != null">
-                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
-            </if>
-            <if test="q.createBy != null and q.createBy != ''">
-                AND p.create_by = #{q.createBy}
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00')
+                AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>
             <if test="q.spuName != null and q.spuName != ''">
-                AND p.spu_name LIKE concat('%', #{q.spuName}, '%')
+                AND p.spu_name LIKE CONCAT('%', #{q.spuName}, '%')
             </if>
             <if test="q.spuStatus != null">
                 AND p.spu_status = #{q.spuStatus}
             </if>
             <if test="q.categoryId != null">
                 AND p.category_id = #{q.categoryId}
+            </if>
+            <if test="q.categoryName != null and q.categoryName != ''">
+                AND pc.category_name LIKE CONCAT('%', #{q.categoryName}, '%')
             </if>
         </where>
     </select>

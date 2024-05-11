@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.scm.mapper.ScmSupplierMapper">
+
+    <resultMap id="ScmSupplierVOResult" type="com.vector.module.scm.pojo.vo.ScmSupplierVO">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="contacts" column="contacts"/>
+        <result property="mobile" column="mobile"/>
+        <result property="province" column="province"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    <sql id="selectScmSupplierVOSql">
+        SELECT p.id, p.create_time, p.supplier_name, p.contacts,
+            p.mobile, p.province, p.address
+        FROM scm_purchase p
+    </sql>
+
+    <select id="selectVOById" parameterType="Long"
+            resultMap="ScmSupplierVOResult">
+        <include refid="selectScmSupplierVOSql"/>
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectVOPage" resultMap="ScmSupplierVOResult"
+            parameterType="com.vector.module.scm.pojo.query.ScmSupplierQuery">
+        <include refid="selectScmSupplierVOSql"/>
+        <where>
+            <if test="q.createBegin != null and q.createEnd != null">
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00')
+                AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.supplierName != null and q.supplierName != ''">
+                AND p.supplier_name LIKE CONCAT('%', #{q.supplierName}, '%')
+            </if>
+            <if test="q.contacts != null and q.contacts != ''">
+                AND p.contacts = #{q.contacts}
+            </if>
+            <if test="q.mobile != null and q.mobile != ''">
+                AND p.mobile = #{q.mobile}
+            </if>
+            <if test="q.province != null and q.province != ''">
+                AND p.province = #{q.province}
+            </if>
+            <if test="q.address != null and q.address != ''">
+                AND p.address LIKE CONCAT('%', #{q.address}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

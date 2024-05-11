@@ -2,39 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.vector.module.pms.mapper.PmsProductMapper">
 
-    <resultMap id="PmsProductVoResult" type="com.vector.module.pms.vo.PmsProductVo">
+    <resultMap id="PmsProductVOResult" type="com.vector.module.pms.pojo.vo.PmsProductVO">
         <result property="id" column="id"/>
         <result property="createTime" column="create_time"/>
-        <result property="createBy" column="create_by"/>
         <result property="productName" column="product_name"/>
         <result property="factory" column="factory"/>
     </resultMap>
 
-    <sql id="selectPmsProductVoSql">
+    <sql id="selectPmsProductVOSql">
         SELECT p.id, p.create_time, p.create_by, p.product_name, p.factory
         FROM pms_product p
     </sql>
 
-    <select id="selectVoById" resultMap="PmsProductVoResult" parameterType="Long">
-        <include refid="selectPmsProductVoSql"/>
-        WHERE p.id=#{id}
+    <select id="selectVOById" resultMap="PmsProductVOResult" parameterType="Long">
+        <include refid="selectPmsProductVOSql"/>
+        WHERE p.id = #{id}
     </select>
 
-    <select id="selectVoPage" resultMap="PmsProductVoResult"
-            parameterType="com.vector.module.pms.vo.PmsProductVo">
-        <include refid="selectPmsProductVoSql"/>
+    <select id="selectVOPage" resultMap="PmsProductVOResult"
+            parameterType="com.vector.module.pms.pojo.query.PmsProductQuery">
+        <include refid="selectPmsProductVOSql"/>
         <where>
             <if test="q.createBegin != null and q.createEnd != null">
-                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
-            </if>
-            <if test="q.createBy != null and q.createBy != ''">
-                AND p.create_by = #{q.createBy}
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00')
+                AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>
             <if test="q.productName != null and q.productName != ''">
-                AND p.product_name LIKE concat('%', #{q.productName}, '%')
+                AND p.product_name LIKE CONCAT('%', #{q.productName}, '%')
             </if>
             <if test="q.factory != null and q.factory != ''">
-                AND p.factory LIKE concat('%', #{q.factory}, '%')
+                AND p.factory LIKE CONCAT('%', #{q.factory}, '%')
             </if>
         </where>
     </select>

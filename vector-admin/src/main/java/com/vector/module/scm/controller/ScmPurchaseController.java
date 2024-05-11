@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import com.vector.module.scm.dto.ScmPurchaseDto;
+import com.vector.module.scm.pojo.dto.ScmPurchaseDTO;
+import com.vector.module.scm.pojo.query.ScmPurchaseQuery;
+import com.vector.module.scm.pojo.vo.ScmPurchaseVO;
 import com.vector.module.scm.service.ScmPurchaseService;
-import com.vector.module.scm.vo.ScmPurchaseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,26 +21,25 @@ public class ScmPurchaseController {
     private ScmPurchaseService scmPurchaseService;
 
     @GetMapping("/list")
-    public R<PageResult> list(@RequestParam Map<String, Object> params) {
-        ScmPurchaseVo query = Pageable.getQuery(params, ScmPurchaseVo.class);
-        IPage<ScmPurchaseVo> page = scmPurchaseService.pageVo(Pageable.getPage(params), query);
+    public R<PageResult> list(ScmPurchaseQuery query) {
+        IPage<ScmPurchaseVO> page = scmPurchaseService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
-    public R<ScmPurchaseVo> get(@PathVariable Long id) {
-        return R.ok(scmPurchaseService.getVoById(id));
+    public R<ScmPurchaseVO> get(@PathVariable Long id) {
+        return R.ok(scmPurchaseService.getVOById(id));
     }
 
     @PostMapping
-    public R<?> add(@RequestBody ScmPurchaseDto purchaseDto) {
-        scmPurchaseService.create(purchaseDto);
+    public R<?> add(@RequestBody ScmPurchaseDTO purchaseDTO) {
+        scmPurchaseService.create(purchaseDTO);
         return R.ok();
     }
 
     @PutMapping
-    public R<?> update(@RequestBody ScmPurchaseDto purchaseDto) {
-        scmPurchaseService.updateById(purchaseDto);
+    public R<?> update(@RequestBody ScmPurchaseDTO purchaseDTO) {
+        scmPurchaseService.updateById(purchaseDTO);
         return R.ok();
     }
 

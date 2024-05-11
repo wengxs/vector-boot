@@ -2,22 +2,23 @@ package com.vector.module.wms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.wms.entity.WmsReceive;
-import com.vector.module.wms.dto.WmsCheckDto;
-import com.vector.module.wms.dto.WmsReceiveDto;
-import com.vector.module.wms.vo.WmsReceiveVo;
+import com.vector.module.wms.pojo.entity.WmsReceive;
+import com.vector.module.wms.pojo.dto.WmsCheckDTO;
+import com.vector.module.wms.pojo.dto.WmsReceiveDTO;
+import com.vector.module.wms.pojo.query.WmsReceiveQuery;
+import com.vector.module.wms.pojo.vo.WmsReceiveVO;
 
 public interface WmsReceiveService extends IService<WmsReceive> {
 
-    WmsReceiveVo getVoById(Long id);
+    WmsReceiveVO getVOById(Long id);
 
-    IPage<WmsReceiveVo> pageVo(IPage<?> page, WmsReceiveVo query);
+    IPage<WmsReceiveVO> pageVO(IPage<?> page, WmsReceiveQuery query);
 
     /**
      * 生成收货单
      * @param receiveForm
      */
-    void create(WmsReceiveDto receiveForm);
+    void create(WmsReceiveDTO receiveForm);
 
     /**
      * 收货单签收
@@ -29,5 +30,5 @@ public interface WmsReceiveService extends IService<WmsReceive> {
      * 收货验收
      * @param checkForm
      */
-    void check(WmsCheckDto checkForm);
+    void check(WmsCheckDTO checkForm);
 }

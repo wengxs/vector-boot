@@ -2,27 +2,28 @@ package com.vector.module.scm.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.scm.dto.ScmPurchaseDto;
-import com.vector.module.scm.entity.ScmPurchase;
-import com.vector.module.scm.vo.ScmPurchaseVo;
+import com.vector.module.scm.pojo.dto.ScmPurchaseDTO;
+import com.vector.module.scm.pojo.entity.ScmPurchase;
+import com.vector.module.scm.pojo.query.ScmPurchaseQuery;
+import com.vector.module.scm.pojo.vo.ScmPurchaseVO;
 
 public interface ScmPurchaseService extends IService<ScmPurchase> {
 
-    ScmPurchaseVo getVoById(Long id);
+    ScmPurchaseVO getVOById(Long id);
 
-    IPage<ScmPurchaseVo> pageVo(IPage<?> page, ScmPurchaseVo query);
+    IPage<ScmPurchaseVO> pageVO(IPage<?> page, ScmPurchaseQuery query);
 
     /**
      * 创建订单
-     * @param purchaseDto
+     * @param purchaseDTO
      */
-    void create(ScmPurchaseDto purchaseDto);
+    void create(ScmPurchaseDTO purchaseDTO);
 
     /**
      * 修改订单
-     * @param purchaseDto
+     * @param purchaseDTO
      */
-    void updateById(ScmPurchaseDto purchaseDto);
+    void updateById(ScmPurchaseDTO purchaseDTO);
 
     /**
      * 取消订单

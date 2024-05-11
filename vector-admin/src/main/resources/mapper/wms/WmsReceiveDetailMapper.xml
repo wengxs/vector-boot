@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.vector.module.wms.mapper.WmsReceiveDetailMapper">
 
-    <resultMap type="com.vector.module.wms.vo.WmsReceiveVo$Detail" id="WmsReceiveDetailVoResult">
+    <resultMap type="com.vector.module.wms.pojo.vo.WmsReceiveVO$Detail" id="WmsReceiveDetailVOResult">
         <result property="id" column="id"/>
         <result property="receiveId" column="receive_id"/>
         <result property="productId" column="product_id"/>
@@ -13,15 +13,15 @@
         <result property="unqualifiedQty" column="unqualified_qty"/>
     </resultMap>
 
-    <sql id="selectPurchaseOrderDetailVoSql">
-        select p.id, p.receive_id, p.product_id, pp.product_name,
+    <sql id="selectPurchaseOrderDetailVOSql">
+        SELECT p.id, p.receive_id, p.product_id, pp.product_name,
                p.qty, p.received_qty, p.qualified_qty, p.unqualified_qty
-        from wms_receive_detail p left join pms_product pp ON pp.id = p.product_id
+        FROM wms_receive_detail p LEFT JOIN pms_product pp ON pp.id = p.product_id
     </sql>
 
-    <select id="selectVoByReceiveId"  parameterType="Long" resultMap="WmsReceiveDetailVoResult">
-        <include refid="selectPurchaseOrderDetailVoSql"/>
-        where p.receive_id=#{receiveId}
+    <select id="selectVOByReceiveId"  parameterType="Long" resultMap="WmsReceiveDetailVOResult">
+        <include refid="selectPurchaseOrderDetailVOSql"/>
+        WHERE p.receive_id = #{receiveId}
     </select>
 
 </mapper>
