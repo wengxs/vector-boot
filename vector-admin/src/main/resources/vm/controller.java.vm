@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
-import ${packageName}.dto.${ClassName}Dto;
-import ${packageName}.entity.${ClassName};
+import ${packageName}.pojo.dto.${ClassName}DTO;
+import ${packageName}.pojo.entity.${ClassName};
+import ${packageName}.pojo.query.${ClassName}Query;
+import ${packageName}.pojo.vo.${ClassName}VO;
 import ${packageName}.service.${ClassName}Service;
-import ${packageName}.vo.${ClassName}Vo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,8 @@ public class ${ClassName}Controller {
     private ${ClassName}Service ${className}Service;
 
     @GetMapping("/list")
-    public R<PageResult> list(${ClassName}Vo query) {
-        IPage<${ClassName}Vo> page = ${className}Service.pageVo(Pageable.getPage(query), query);
+    public R<PageResult> list(${ClassName}Query query) {
+        IPage<${ClassName}VO> page = ${className}Service.pageVO(Pageable.getPage(query), query);
 ###foreach ($tableField in $tableFields)
 ###if($tableField.isQuery)
 ###set($javaField = ${tableField.javaField.substring(0,1).toUpperCase()} + ${tableField.javaField.substring(1)})
@@ -48,22 +49,22 @@ public class ${ClassName}Controller {
     }
 
     @GetMapping("/{id}")
-    public R<${ClassName}Vo> get(@PathVariable ${pkJavaType} id) {
-        return R.ok(${className}Service.getVoById(id));
+    public R<${ClassName}VO> get(@PathVariable ${pkJavaType} id) {
+        return R.ok(${className}Service.getVOById(id));
     }
 
     @PostMapping
-    public R<?> add(@RequestBody ${ClassName}Dto ${bizName}Dto) {
+    public R<?> add(@RequestBody ${ClassName}DTO ${bizName}DTO) {
         ${ClassName} ${className} = new ${ClassName}();
-        BeanUtils.copyProperties(${bizName}Dto, ${className});
+        BeanUtils.copyProperties(${bizName}DTO, ${className});
         ${className}Service.save(${className});
         return R.ok();
     }
 
     @PutMapping
-    public R<?> update(@RequestBody ${ClassName}Dto ${bizName}Dto) {
+    public R<?> update(@RequestBody ${ClassName}DTO ${bizName}DTO) {
         ${ClassName} ${className} = new ${ClassName}();
-        BeanUtils.copyProperties(${bizName}Dto, ${className});
+        BeanUtils.copyProperties(${bizName}DTO, ${className});
         ${className}Service.updateById(${className});
         return R.ok();
     }

@@ -49,6 +49,7 @@ public class VelocityUtil {
     public static List<String> getTemplateList() {
         List<String> templates = new ArrayList<>();
         templates.add("vm/entity.java.vm");
+        templates.add("vm/query.java.vm");
         templates.add("vm/vo.java.vm");
         templates.add("vm/dto.java.vm");
         templates.add("vm/mapper.xml.vm");

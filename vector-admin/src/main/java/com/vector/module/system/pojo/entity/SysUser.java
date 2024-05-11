@@ -1,4 +1,4 @@
-package com.vector.module.system.entity;
+package com.vector.module.system.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.vector.common.core.entity.BaseEntity;

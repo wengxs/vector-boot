@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.util.BizAssert;
-import com.vector.module.system.entity.SysRole;
-import com.vector.module.system.entity.SysUser;
-import com.vector.module.system.entity.SysUserRole;
+import com.vector.module.system.pojo.entity.SysRole;
+import com.vector.module.system.pojo.entity.SysUser;
+import com.vector.module.system.pojo.entity.SysUserRole;
 import com.vector.module.system.mapper.SysUserMapper;
+import com.vector.module.system.pojo.query.SysUserQuery;
 import com.vector.module.system.service.SysRoleService;
 import com.vector.module.system.service.SysUserRoleService;
 import com.vector.module.system.service.SysUserService;
-import com.vector.module.system.vo.SysUserVo;
+import com.vector.module.system.pojo.vo.SysUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +32,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysUserRoleService sysUserRoleService;
 
     @Override
-    public SysUserVo getVoById(Long id) {
-        return baseMapper.selectVoById(id);
+    public SysUserVO getVOById(Long id) {
+        return baseMapper.selectVOById(id);
     }
 
     @Override
-    public IPage<SysUserVo> pageVo(IPage<?> page, SysUserVo query) {
-        return baseMapper.selectVoPage(page, query);
+    public IPage<SysUserVO> pageVO(IPage<?> page, SysUserQuery query) {
+        return baseMapper.selectVOPage(page, query);
     }
 
     @Override

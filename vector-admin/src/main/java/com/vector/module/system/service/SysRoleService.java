@@ -2,8 +2,9 @@ package com.vector.module.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.system.entity.SysRole;
-import com.vector.module.system.vo.SysRoleVo;
+import com.vector.module.system.pojo.entity.SysRole;
+import com.vector.module.system.pojo.query.SysRoleQuery;
+import com.vector.module.system.pojo.vo.SysRoleVO;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ import java.util.List;
  */
 public interface SysRoleService extends IService<SysRole> {
 
-    SysRoleVo getVoById(Long id);
+    SysRoleVO getVOById(Long id);
 
-    IPage<SysRoleVo> pageVo(IPage<?> page, SysRoleVo query);
+    IPage<SysRoleVO> pageVO(IPage<?> page, SysRoleQuery query);
 
     boolean exists(String roleName);
 

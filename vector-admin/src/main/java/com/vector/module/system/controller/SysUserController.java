@@ -6,11 +6,12 @@ import com.vector.common.core.query.Pageable;
 import com.vector.common.core.result.PageResult;
 import com.vector.common.core.result.R;
 import com.vector.common.core.util.BizAssert;
-import com.vector.module.system.dto.SysUserDto;
-import com.vector.module.system.entity.SysUser;
 import com.vector.module.system.enums.SysUserStatus;
+import com.vector.module.system.pojo.dto.SysUserDTO;
+import com.vector.module.system.pojo.entity.SysUser;
+import com.vector.module.system.pojo.query.SysUserQuery;
+import com.vector.module.system.pojo.vo.SysUserVO;
 import com.vector.module.system.service.SysUserService;
-import com.vector.module.system.vo.SysUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,48 +37,48 @@ public class SysUserController {
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:user:query')")
-    public R<PageResult> list(SysUserVo query) {
-        IPage<SysUserVo> page = sysUserService.pageVo(Pageable.getPage(query), query);
+    public R<PageResult> list(SysUserQuery query) {
+        IPage<SysUserVO> page = sysUserService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
 //    @PreAuthorize("hasAuthority('sys:user:query')")
-    public R<SysUserVo> get(@PathVariable Long id) {
-        SysUserVo userVo = sysUserService.getVoById(id);
-        userVo.setRoleIds(sysRoleService.listIdsByUserId(id));
-        return R.ok(userVo);
+    public R<SysUserVO> get(@PathVariable Long id) {
+        SysUserVO userVO = sysUserService.getVOById(id);
+        userVO.setRoleIds(sysRoleService.listIdsByUserId(id));
+        return R.ok(userVO);
     }
 
     @PostMapping
 //    @PreAuthorize("hasAuthority('sys:user:add')")
-    public R<?> add(@RequestBody SysUserDto userDto) {
-        BizAssert.notEmpty(userDto.getRoleIds(), "必须选择一个角色");
-        BizAssert.isTrue(!sysUserService.exists(userDto.getUsername()), userDto.getUsername() + "已存在");
-        String password = userDto.getPassword();
+    public R<?> add(@RequestBody SysUserDTO userDTO) {
+        BizAssert.notEmpty(userDTO.getRoleIds(), "必须选择一个角色");
+        BizAssert.isTrue(!sysUserService.exists(userDTO.getUsername()), userDTO.getUsername() + "已存在");
+        String password = userDTO.getPassword();
         password = passwordEncoder.encode(
                 StringUtils.isNotBlank(password) ? password : SecurityConstant.DEFAULT_PASSWORD);
         SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(userDto, sysUser);
+        BeanUtils.copyProperties(userDTO, sysUser);
         sysUser.setId(null);
         sysUser.setPassword(password);
-        sysUserService.saveOrUpdate(sysUser, Arrays.asList(userDto.getRoleIds()));
+        sysUserService.saveOrUpdate(sysUser, Arrays.asList(userDTO.getRoleIds()));
         return R.ok();
     }
 
     @PutMapping
 //    @PreAuthorize("hasAuthority('sys:user:edit')")
-    public R<?> update(@RequestBody SysUserDto userDto) {
-        BizAssert.isTrue(userDto.getId() != 1L, "不允许操作超级管理员");
-        BizAssert.notEmpty(userDto.getRoleIds(), "必须选择一个角色");
-        if (StringUtils.isNotBlank(userDto.getPassword())) {
-            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+    public R<?> update(@RequestBody SysUserDTO userDTO) {
+        BizAssert.isTrue(userDTO.getId() != 1L, "不允许操作超级管理员");
+        BizAssert.notEmpty(userDTO.getRoleIds(), "必须选择一个角色");
+        if (StringUtils.isNotBlank(userDTO.getPassword())) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         } else {
-            userDto.setPassword(null);
+            userDTO.setPassword(null);
         }
         SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(userDto, sysUser);
-        sysUserService.saveOrUpdate(sysUser, Arrays.asList(userDto.getRoleIds()));
+        BeanUtils.copyProperties(userDTO, sysUser);
+        sysUserService.saveOrUpdate(sysUser, Arrays.asList(userDTO.getRoleIds()));
         return R.ok();
     }
 

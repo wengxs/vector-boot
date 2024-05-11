@@ -1,4 +1,4 @@
-package com.vector.module.system.vo;
+package com.vector.module.system.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.List;
  * 前端路由视图
  */
 @Data
-public class RouterVo {
+public class RouterVO {
 
     private String name;
 
@@ -20,7 +20,7 @@ public class RouterVo {
 
     private Meta meta;
 
-    private List<RouterVo> children;
+    private List<RouterVO> children;
 
     @Data
     @NoArgsConstructor

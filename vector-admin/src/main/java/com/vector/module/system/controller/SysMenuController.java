@@ -1,11 +1,12 @@
 package com.vector.module.system.controller;
 
 import com.vector.common.core.result.R;
-import com.vector.module.system.dto.SysMenuDto;
-import com.vector.module.system.entity.SysMenu;
+import com.vector.module.system.pojo.dto.SysMenuDTO;
+import com.vector.module.system.pojo.entity.SysMenu;
+import com.vector.module.system.pojo.query.SysMenuQuery;
 import com.vector.module.system.service.SysMenuService;
-import com.vector.module.system.vo.MenuTree;
-import com.vector.module.system.vo.SysMenuVo;
+import com.vector.module.system.pojo.vo.MenuTree;
+import com.vector.module.system.pojo.vo.SysMenuVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -22,21 +23,21 @@ public class SysMenuController {
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('sys:menu:query')")
-    public R<List<SysMenuVo>> list(SysMenuVo params) {
-        List<SysMenuVo> list = sysMenuService.listTree();
-        return R.ok(filterQuery(list, params));
+    public R<List<SysMenuVO>> list(SysMenuQuery query) {
+        List<SysMenuVO> list = sysMenuService.listTree();
+        return R.ok(filterQuery(list, query));
     }
 
-    private List<SysMenuVo> filterQuery(List<SysMenuVo> list, SysMenuVo params) {
+    private List<SysMenuVO> filterQuery(List<SysMenuVO> list, SysMenuQuery query) {
         return list.stream().filter(item -> {
-            if (StringUtils.isNotBlank(params.getMenuName()) && item.getMenuName().contains(params.getMenuName())) {
+            if (StringUtils.isNotBlank(query.getMenuName()) && item.getMenuName().contains(query.getMenuName())) {
                 return true;
             }
-            item.setChildren(filterQuery(item.getChildren(), params));
-            if (!CollectionUtils.isEmpty(item.getChildren()) || StringUtils.isBlank(params.getMenuName())) {
+            item.setChildren(filterQuery(item.getChildren(), query));
+            if (!CollectionUtils.isEmpty(item.getChildren()) || StringUtils.isBlank(query.getMenuName())) {
                 return true;
             } else {
-                return item.getMenuName().contains(params.getMenuName());
+                return item.getMenuName().contains(query.getMenuName());
             }
         }).toList();
     }
@@ -55,8 +56,8 @@ public class SysMenuController {
 
     @PostMapping
 //    @PreAuthorize("hasAuthority('sys:menu:add')")
-    public R<?> add(@RequestBody SysMenuDto menuDto) {
-        sysMenuService.save(menuDto);
+    public R<?> add(@RequestBody SysMenuDTO menuDTO) {
+        sysMenuService.save(menuDTO);
         return R.ok();
     }
 
