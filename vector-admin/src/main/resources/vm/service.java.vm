@@ -2,8 +2,9 @@ package ${packageName}.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import ${packageName}.entity.${ClassName};
-import ${packageName}.vo.${ClassName}Vo;
+import ${packageName}.pojo.entity.${ClassName};
+import ${packageName}.pojo.query.${ClassName}Query;
+import ${packageName}.pojo.vo.${ClassName}VO;
 
 /**
  * ${tableComment} Service
@@ -12,7 +13,7 @@ import ${packageName}.vo.${ClassName}Vo;
  */
 public interface ${ClassName}Service extends IService<${ClassName}> {
 
-    ${ClassName}Vo getVoById(Long id);
+    ${ClassName}VO getVOById(Long id);
 
-    IPage<${ClassName}Vo> pageVo(IPage<?> page, ${ClassName}Vo query);
+    IPage<${ClassName}VO> pageVO(IPage<?> page, ${ClassName}Query query);
 }

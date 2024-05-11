@@ -1,4 +1,4 @@
-package ${packageName}.entity;
+package ${packageName}.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.vector.common.core.entity.BaseEntity;

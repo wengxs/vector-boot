@@ -1,14 +1,14 @@
-package ${packageName}.dto;
+package ${packageName}.pojo.dto;
 
 import lombok.Data;
 
 /**
- * ${tableComment} Dto
+ * ${tableComment} DTO
  * @author ${author}
  * @date ${date}
  */
 @Data
-public class ${ClassName}Dto {
+public class ${ClassName}DTO {
 
     /** ID */
     private Long id;

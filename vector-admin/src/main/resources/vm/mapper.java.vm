@@ -2,8 +2,9 @@ package ${packageName}.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import ${packageName}.entity.${ClassName};
-import ${packageName}.vo.${ClassName}Vo;
+import ${packageName}.pojo.entity.${ClassName};
+import ${packageName}.pojo.query.${ClassName}Query;
+import ${packageName}.pojo.vo.${ClassName}VO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
 
-    ${ClassName}Vo selectVoById(Long id);
+    ${ClassName}VO selectVOById(Long id);
 
-    IPage<${ClassName}Vo> selectVoPage(@Param("page") IPage<?> page, @Param("q") ${ClassName}Vo query);
+    IPage<${ClassName}VO> selectVOPage(@Param("page") IPage<?> page, @Param("q") ${ClassName}Query query);
 }

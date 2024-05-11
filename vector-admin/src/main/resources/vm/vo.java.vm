@@ -1,19 +1,16 @@
-package ${packageName}.vo;
+package ${packageName}.pojo.vo;
 
-import com.vector.common.core.query.PageQuery;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * ${tableComment} Vo
+ * ${tableComment} VO
  * @author ${author}
  * @date ${date}
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ${ClassName}Vo extends PageQuery {
+public class ${ClassName}VO {
 
     /** ID */
     private Long id;

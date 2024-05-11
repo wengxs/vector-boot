@@ -1,0 +1,22 @@
+package ${packageName}.pojo.query;
+
+import com.vector.common.core.query.PageQuery;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * ${tableComment} 查询参数
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ${ClassName}Query extends PageQuery {
+#foreach ($tableField in $tableFields)
+#if($tableField.isQuery)
+
+    /** ${tableField.comment} */
+    private ${tableField.javaType} ${tableField.javaField};
+#end
+#end
+}
