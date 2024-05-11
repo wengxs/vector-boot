@@ -15,7 +15,7 @@ public class PmsCategoryTreeVo {
     private Long id;
 
     /** 创建人 */
-    private String createBy;
+    private Long createBy;
 
     /**创建时间 */
     private Date createTime;

@@ -2,6 +2,7 @@ package com.vector.module.pms.vo;
 
 import com.vector.common.core.query.PageQuery;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date 2024/05/04
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class PmsProductVo extends PageQuery {
 
     /** ID */
