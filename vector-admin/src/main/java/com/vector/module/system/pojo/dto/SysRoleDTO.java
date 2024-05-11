@@ -1,4 +1,4 @@
-package com.vector.module.system.dto;
+package com.vector.module.system.pojo.dto;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * @author wengxs
  */
 @Data
-public class SysRoleDto {
+public class SysRoleDTO {
 
     /** 角色ID */
     private Long Id;

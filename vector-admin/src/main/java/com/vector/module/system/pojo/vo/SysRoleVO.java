@@ -1,8 +1,6 @@
-package com.vector.module.system.vo;
+package com.vector.module.system.pojo.vo;
 
-import com.vector.common.core.query.PageQuery;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.util.List;
@@ -11,15 +9,13 @@ import java.util.List;
  * 角色视图
  * @author wengxs
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SysRoleVo extends PageQuery {
+public class SysRoleVO {
 
     /** 角色ID */
     private Long id;
 
     /** 创建时间 */
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 创建人 */

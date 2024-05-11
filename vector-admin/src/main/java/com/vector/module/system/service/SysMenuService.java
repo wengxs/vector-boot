@@ -1,11 +1,11 @@
 package com.vector.module.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.system.dto.SysMenuDto;
-import com.vector.module.system.entity.SysMenu;
-import com.vector.module.system.vo.MenuTree;
-import com.vector.module.system.vo.RouterVo;
-import com.vector.module.system.vo.SysMenuVo;
+import com.vector.module.system.pojo.dto.SysMenuDTO;
+import com.vector.module.system.pojo.entity.SysMenu;
+import com.vector.module.system.pojo.vo.MenuTree;
+import com.vector.module.system.pojo.vo.RouterVO;
+import com.vector.module.system.pojo.vo.SysMenuVO;
 
 import java.util.List;
 
@@ -16,17 +16,17 @@ public interface SysMenuService extends IService<SysMenu> {
 
     List<SysMenu> listByUserId(Long userId);
 
-    List<RouterVo> getRouters(Long userId);
+    List<RouterVO> getRouters(Long userId);
 
     List<MenuTree> menuTree();
 
     List<Long> listIdsByRoleId(Long roleId);
 
-    List<SysMenuVo> listTree();
+    List<SysMenuVO> listTree();
 
     List<MenuTree> routerTree();
 
-    void save(SysMenuDto menuDto);
+    void save(SysMenuDTO menuDTO);
 
     /**
      * 删除菜单及子菜单

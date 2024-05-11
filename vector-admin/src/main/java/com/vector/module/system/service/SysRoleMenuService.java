@@ -1,7 +1,7 @@
 package com.vector.module.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.system.entity.SysRoleMenu;
+import com.vector.module.system.pojo.entity.SysRoleMenu;
 
 import java.util.List;
 

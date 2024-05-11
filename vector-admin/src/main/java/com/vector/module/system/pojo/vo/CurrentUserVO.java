@@ -1,11 +1,15 @@
-package com.vector.module.system.vo;
+package com.vector.module.system.pojo.vo;
 
 import lombok.Data;
 
 import java.util.Set;
 
+/**
+ * 当前登录用户视图
+ * @author wengxs
+ */
 @Data
-public class CurrentUserVo {
+public class CurrentUserVO {
 
     /** 用户名 */
     private String username;

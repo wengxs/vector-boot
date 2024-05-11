@@ -5,17 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.constant.SecurityConstant;
 import com.vector.common.core.util.BizAssert;
-import com.vector.module.system.dto.SysMenuDto;
-import com.vector.module.system.entity.SysMenu;
-import com.vector.module.system.entity.SysRoleMenu;
+import com.vector.module.system.pojo.dto.SysMenuDTO;
+import com.vector.module.system.pojo.entity.SysMenu;
+import com.vector.module.system.pojo.entity.SysRoleMenu;
 import com.vector.module.system.enums.SysMenuPermission;
 import com.vector.module.system.enums.SysMenuType;
 import com.vector.module.system.mapper.SysMenuMapper;
 import com.vector.module.system.service.SysMenuService;
 import com.vector.module.system.service.SysRoleMenuService;
-import com.vector.module.system.vo.MenuTree;
-import com.vector.module.system.vo.RouterVo;
-import com.vector.module.system.vo.SysMenuVo;
+import com.vector.module.system.pojo.vo.MenuTree;
+import com.vector.module.system.pojo.vo.RouterVO;
+import com.vector.module.system.pojo.vo.SysMenuVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -39,23 +39,23 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     @Transactional
-    public void save(SysMenuDto menuDto) {
+    public void save(SysMenuDTO menuDTO) {
         SysMenu sysMenu = new SysMenu();
-        BeanUtils.copyProperties(menuDto, sysMenu);
+        BeanUtils.copyProperties(menuDTO, sysMenu);
         baseMapper.insert(sysMenu);
         if (sysMenu.getParentId() == 0L || SysMenuType.BUTTON.equals(sysMenu.getType())) {
             return;
         }
-        if (!CollectionUtils.isEmpty(menuDto.getSubPermissions())) {
+        if (!CollectionUtils.isEmpty(menuDTO.getSubPermissions())) {
             String permissionPrefix;
-            if (StringUtils.isNotBlank(menuDto.getPermission())) {
-                permissionPrefix = menuDto.getPermission().substring(0, menuDto.getPermission().lastIndexOf(":") + 1);
+            if (StringUtils.isNotBlank(menuDTO.getPermission())) {
+                permissionPrefix = menuDTO.getPermission().substring(0, menuDTO.getPermission().lastIndexOf(":") + 1);
             } else {
-                permissionPrefix = menuDto.getComponent().replace("/", ":");
+                permissionPrefix = menuDTO.getComponent().replace("/", ":");
                 permissionPrefix = permissionPrefix.substring(0, permissionPrefix.lastIndexOf(":") + 1);
             }
-            for (int i = 0; i < menuDto.getSubPermissions().size(); i++) {
-                SysMenuPermission subPermission = menuDto.getSubPermissions().get(i);
+            for (int i = 0; i < menuDTO.getSubPermissions().size(); i++) {
+                SysMenuPermission subPermission = menuDTO.getSubPermissions().get(i);
                 SysMenu subMenu = new SysMenu();
                 subMenu.setParentId(sysMenu.getId());
                 subMenu.setType(SysMenuType.BUTTON);
@@ -93,7 +93,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<RouterVo> getRouters(Long userId) {
+    public List<RouterVO> getRouters(Long userId) {
         List<SysMenu> menus;
         if (SecurityConstant.ADMIN_ID.equals(userId)) {
             menus = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>()
@@ -107,17 +107,17 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return genRouters(menus, 0L);
     }
 
-    private List<RouterVo> genRouters(List<SysMenu> menus, Long parentId) {
-        List<RouterVo> routers = new ArrayList<>();
+    private List<RouterVO> genRouters(List<SysMenu> menus, Long parentId) {
+        List<RouterVO> routers = new ArrayList<>();
         menus.stream()
                 .filter(menu -> SysMenuType.MENU.equals(menu.getType()))
                 .filter(menu -> parentId.equals(menu.getParentId()))
                 .forEach(menu -> {
-                    RouterVo router = new RouterVo();
+                    RouterVO router = new RouterVO();
                     router.setName(convertToName(menu.getComponent()));
                     router.setPath(menu.getPath());
                     router.setComponent(StringUtils.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
-                    router.setMeta(new RouterVo.Meta(menu.getMenuName(), menu.getIcon(), true));
+                    router.setMeta(new RouterVO.Meta(menu.getMenuName(), menu.getIcon(), true));
                     router.setChildren(genRouters(menus, menu.getId()));
                     routers.add(router);
                 });
@@ -160,21 +160,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysMenuVo> listTree() {
+    public List<SysMenuVO> listTree() {
         List<SysMenu> menus = baseMapper.selectList(new LambdaQueryWrapper<SysMenu>().orderByAsc(SysMenu::getSort));
         return genTree(menus, 0L);
     }
 
-    private List<SysMenuVo> genTree(List<SysMenu> menus, Long parentId) {
-        List<SysMenuVo> sysMenus = new ArrayList<>();
+    private List<SysMenuVO> genTree(List<SysMenu> menus, Long parentId) {
+        List<SysMenuVO> sysMenus = new ArrayList<>();
         menus.stream()
                 .filter(menu -> parentId.equals(menu.getParentId()))
                 .forEach(menu -> {
-                    SysMenuVo menuVo = new SysMenuVo();
-                    BeanUtils.copyProperties(menu, menuVo);
-                    menuVo.setId(menu.getId());
-                    menuVo.setChildren(genTree(menus, menu.getId()));
-                    sysMenus.add(menuVo);
+                    SysMenuVO menuVO = new SysMenuVO();
+                    BeanUtils.copyProperties(menu, menuVO);
+                    menuVO.setId(menu.getId());
+                    menuVO.setChildren(genTree(menus, menu.getId()));
+                    sysMenus.add(menuVO);
                 });
         return sysMenus;
     }

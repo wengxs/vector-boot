@@ -2,9 +2,10 @@ package com.vector.module.system.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vector.module.system.entity.SysRole;
-import com.vector.module.system.entity.SysUser;
-import com.vector.module.system.vo.SysUserVo;
+import com.vector.module.system.pojo.entity.SysRole;
+import com.vector.module.system.pojo.entity.SysUser;
+import com.vector.module.system.pojo.query.SysUserQuery;
+import com.vector.module.system.pojo.vo.SysUserVO;
 
 import java.util.List;
 
@@ -13,9 +14,9 @@ import java.util.List;
  */
 public interface SysUserService extends IService<SysUser> {
 
-    SysUserVo getVoById(Long id);
+    SysUserVO getVOById(Long id);
 
-    IPage<SysUserVo> pageVo(IPage<?> page, SysUserVo query);
+    IPage<SysUserVO> pageVO(IPage<?> page, SysUserQuery query);
 
     void updatePassword(String username, String newPassword);
 
