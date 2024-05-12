@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="${packageName}.mapper.${ClassName}Mapper">
 
-    <resultMap id="${ClassName}VOResult" type="${packageName}.vo.${ClassName}VO">
+    <resultMap id="${ClassName}VOResult" type="${packageName}.pojo.vo.${ClassName}VO">
 #foreach ($tableField in $tableFields)
 #if($tableField.javaField != "createBy" && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
         <result property="${tableField.javaField}" column="${tableField.name}"/>
@@ -22,7 +22,7 @@
 
     <select id="selectVOById" resultMap="${ClassName}VOResult" parameterType="Long">
         <include refid="select${ClassName}VOSql"/>
-        WHERE p.id=#{id}
+        WHERE p.id = #{id}
     </select>
 
     <select id="selectVOPage" resultMap="${ClassName}VOResult"
@@ -30,13 +30,14 @@
         <include refid="select${ClassName}VOSql"/>
         <where>
             <if test="q.createBegin != null and q.createEnd != null">
-                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00')
+                AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>
 #foreach ($tableField in $tableFields)
 #if($tableField.isQuery)
 #if($tableField.javaType == "String" && $tableField.queryType == "LIKE")
             <if test="q.${tableField.javaField} != null and q.${tableField.javaField} != ''">
-                AND p.${tableField.name} LIKE concat('%', #{q.${tableField.javaField}}, '%')
+                AND p.${tableField.name} LIKE CONCAT('%', #{q.${tableField.javaField}}, '%')
             </if>
 #elseif($tableField.javaType == "String")
             <if test="q.${tableField.javaField} != null and q.${tableField.javaField} != ''">
