@@ -78,7 +78,7 @@
 #if($tableField.javaField != "id" && $tableField.isList
   && $tableField.javaField != "createTime" && $tableField.javaField != "createBy"
   && $tableField.javaField != "updateTime" && $tableField.javaField != "updateBy")
-        <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center"/>
+        <el-table-column label="${tableField.comment}" prop="${tableField.javaField}" align="center" />
 #end
 #end
         <el-table-column label="创建时间" prop="createTime" align="center" width="160" />
