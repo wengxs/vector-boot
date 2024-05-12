@@ -2,9 +2,13 @@ package com.vector.module.common.controller;
 
 import com.vector.common.core.result.R;
 import com.vector.module.common.pojo.EnumVO;
+import com.vector.module.pms.enums.PmsSpuStatus;
+import com.vector.module.scm.enums.ScmPurchaseStatus;
 import com.vector.module.system.enums.SysMenuPermission;
 import com.vector.module.system.enums.SysMenuType;
 import com.vector.module.system.enums.SysUserStatus;
+import com.vector.module.wms.enums.BizType;
+import com.vector.module.wms.enums.WmsReceiveStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +33,10 @@ public class EnumController {
         enums.put("SysUserStatus", SysUserStatus.class);
         enums.put("SysMenuType", SysMenuType.class);
         enums.put("SysMenuPermission", SysMenuPermission.class);
+        enums.put("ScmPurchaseStatus", ScmPurchaseStatus.class);
+        enums.put("WmsReceiveStatus", WmsReceiveStatus.class);
+        enums.put("WmsBizType", BizType.class);
+        enums.put("PmsSpuStatus", PmsSpuStatus.class);
     }
 
     @GetMapping("/{enumName}")
