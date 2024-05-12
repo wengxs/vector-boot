@@ -33,7 +33,6 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
                     PmsCategoryTreeVO treeVO = new PmsCategoryTreeVO();
                     treeVO.setId(pmsCategory.getId());
                     treeVO.setCreateTime(pmsCategory.getCreateTime());
-                    treeVO.setCreateBy(pmsCategory.getCreateBy());
                     treeVO.setCategoryName(pmsCategory.getCategoryName());
                     treeVO.setIcon(pmsCategory.getIcon());
                     treeVO.setParentId(pmsCategory.getParentId());
