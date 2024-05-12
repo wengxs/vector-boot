@@ -8,6 +8,11 @@ import com.vector.module.scm.pojo.vo.ScmSupplierVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * 供应商信息 Mapper
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Mapper
 public interface ScmSupplierMapper extends BaseMapper<ScmSupplier> {
 

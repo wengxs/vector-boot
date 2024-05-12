@@ -5,6 +5,11 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * 采购单 DTO
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Data
 public class ScmPurchaseDTO {
 

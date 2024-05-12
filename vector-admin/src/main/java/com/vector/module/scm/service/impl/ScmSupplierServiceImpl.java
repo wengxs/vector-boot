@@ -9,8 +9,14 @@ import com.vector.module.scm.pojo.vo.ScmSupplierVO;
 import com.vector.module.scm.service.ScmSupplierService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 供应商信息 ServiceImpl
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Service
-public class ScmSupplierServiceImpl extends ServiceImpl<ScmSupplierMapper, ScmSupplier> implements ScmSupplierService {
+public class ScmSupplierServiceImpl extends ServiceImpl<ScmSupplierMapper, ScmSupplier>
+        implements ScmSupplierService {
 
     @Override
     public ScmSupplierVO getVOById(Long id) {

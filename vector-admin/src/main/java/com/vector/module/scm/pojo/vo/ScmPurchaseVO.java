@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 采购单 VO
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Data
 public class ScmPurchaseVO {
 
@@ -25,11 +30,23 @@ public class ScmPurchaseVO {
     /** 供应商ID */
     private Long supplierId;
 
-    /** 供应商名称 */
+    /** 供应商 */
     private String supplierName;
 
     /** 采购备注 */
     private String purchaseRemake;
+
+    /** 订单金额 */
+    private BigDecimal amount;
+
+    /** 签约时间 */
+    private Date signedTime;
+
+    /** 完结时间 */
+    private Date finishedTime;
+
+    /** 取消时间 */
+    private Date canceledTime;
 
     /** 采购明细 */
     private List<Detail> details;

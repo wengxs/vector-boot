@@ -19,7 +19,7 @@
         FROM scm_purchase_detail p LEFT JOIN pms_product pp ON pp.id = p.product_id
     </sql>
 
-    <select id="selectVOByPurchaseId" parameterType="Long" resultMap="ScmPurchaseDetailVOResult">
+    <select id="selectVOByPurchaseId" resultMap="ScmPurchaseDetailVOResult" parameterType="Long">
         <include refid="selectScmPurchaseDetailVOSql"/>
         WHERE p.purchase_id = #{purchaseId}
     </select>

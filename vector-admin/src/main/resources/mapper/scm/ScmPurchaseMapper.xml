@@ -10,18 +10,21 @@
         <result property="supplierId" column="supplier_id"/>
         <result property="supplierName" column="supplier_name"/>
         <result property="purchaseRemake" column="purchase_remake"/>
+        <result property="amount" column="amount"/>
+        <result property="signedTime" column="signed_time"/>
+        <result property="finishedTime" column="finished_time"/>
+        <result property="canceledTime" column="canceled_time"/>
     </resultMap>
 
     <sql id="selectScmPurchaseVOSql">
-        SELECT p.id, p.create_time, p.purchase_no, p.purchase_status,
-            p.supplier_id, ss.supplier_name, p.purchase_remake
+        SELECT p.id, p.create_time, p.purchase_no, p.purchase_status, p.supplier_id, ss.supplier_name,
+               p.purchase_remake, p.amount, p.signed_time, p.finished_time, p.canceled_time
         FROM scm_purchase p LEFT JOIN scm_supplier ss ON ss.id = p.supplier_id
     </sql>
 
-    <select id="selectVOById" parameterType="Long"
-            resultMap="ScmPurchaseVOResult">
+    <select id="selectVOById" resultMap="ScmPurchaseVOResult" parameterType="Long">
         <include refid="selectScmPurchaseVOSql"/>
-        where p.id = #{id}
+        WHERE p.id = #{id}
     </select>
 
     <select id="selectVOPage" resultMap="ScmPurchaseVOResult"
@@ -35,10 +38,10 @@
             <if test="q.purchaseNo != null and q.purchaseNo != ''">
                 AND p.purchase_no = #{q.purchaseNo}
             </if>
-            <if test="q.purchaseStatus != null ">
+            <if test="q.purchaseStatus != null">
                 AND p.purchase_status = #{q.purchaseStatus}
             </if>
-            <if test="q.supplierId != null ">
+            <if test="q.supplierId != null">
                 AND p.supplier_id = #{q.supplierId}
             </if>
             <if test="q.supplierName != null and q.supplierName != ''">
@@ -50,7 +53,7 @@
             </if>
             <if test="q.productName != null and q.productName != ''">
                 AND EXISTS(SELECT 1 FROM scm_purchase_detail pd LEFT JOIN pms_product pp ON pp.id = pd.product_id
-                WHERE pd.purchase_id = p.id AND pp.name LIKE CONCAT('%', #{q.productName}, '%'))
+                WHERE pd.purchase_id = p.id AND pp.product_name LIKE CONCAT('%', #{q.productName}, '%'))
             </if>
         </where>
     </select>

@@ -1,7 +1,6 @@
 package com.vector.module.scm.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vector.common.core.entity.BaseEntity;
 import com.vector.module.scm.enums.ScmPurchaseStatus;
 import lombok.Data;
@@ -10,8 +9,13 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * 采购单 Entity
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("scm_purchase")
 public class ScmPurchase extends BaseEntity<Long> {
 
@@ -31,15 +35,11 @@ public class ScmPurchase extends BaseEntity<Long> {
     private BigDecimal amount;
 
     /** 签约时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date signedTime;
 
-    /** 签约时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    /** 完结时间 */
     private Date finishedTime;
 
     /** 取消时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date canceledTime;
-
 }

@@ -27,9 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 
+/**
+ * 采购单 ServiceImpl
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @Slf4j
 @Service
-public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPurchase> 
+public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPurchase>
         implements ScmPurchaseService {
 
     @Autowired
@@ -135,9 +140,6 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
             detail.setQty(purchaseDetail.getQty());
             return detail;
         }).toList());
-        // 远程创建收货单
-//        R<?> r = warehouseApi.receiveCreate(form);
-//        Assert.isTrue(r.isOk(), r.getMessage());
         // 使用mq异步创建收货单
         rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE, "receiveCreate", form);
 
@@ -168,4 +170,5 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
         purchase.setFinishedTime(new Date());
         baseMapper.updateById(purchase);
     }
+
 }

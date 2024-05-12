@@ -1,19 +1,17 @@
-package com.vector.module.scm.pojo.entity;
+package com.vector.module.scm.pojo.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.vector.common.core.entity.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
- * 供应商信息 Entity
+ * 供应商信息 DTO
  * @author wengxs
  * @date 2024/05/12
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName("scm_supplier")
-public class ScmSupplier extends BaseEntity<Long> {
+public class ScmSupplierDTO {
+
+    /** ID */
+    private Long id;
 
     /** 供应商 */
     private String supplierName;

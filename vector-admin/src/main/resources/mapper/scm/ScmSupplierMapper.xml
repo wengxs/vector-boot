@@ -13,13 +13,11 @@
     </resultMap>
 
     <sql id="selectScmSupplierVOSql">
-        SELECT p.id, p.create_time, p.supplier_name, p.contacts,
-            p.mobile, p.province, p.address
-        FROM scm_purchase p
+        SELECT p.id, p.create_time, p.supplier_name, p.contacts, p.mobile, p.province, p.address
+        FROM scm_supplier p
     </sql>
 
-    <select id="selectVOById" parameterType="Long"
-            resultMap="ScmSupplierVOResult">
+    <select id="selectVOById" resultMap="ScmSupplierVOResult" parameterType="Long">
         <include refid="selectScmSupplierVOSql"/>
         WHERE p.id = #{id}
     </select>

@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * 采购单 Controller
+ * @author wengxs
+ * @date 2024/05/12
+ */
 @RestController
 @RequestMapping("scm/purchase")
 public class ScmPurchaseController {

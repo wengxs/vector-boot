@@ -7,6 +7,11 @@ import com.vector.module.scm.pojo.entity.ScmPurchase;
 import com.vector.module.scm.pojo.query.ScmPurchaseQuery;
 import com.vector.module.scm.pojo.vo.ScmPurchaseVO;
 
+/**
+ * 采购单 Service
+ * @author wengxs
+ * @date 2024/05/12
+ */
 public interface ScmPurchaseService extends IService<ScmPurchase> {
 
     ScmPurchaseVO getVOById(Long id);

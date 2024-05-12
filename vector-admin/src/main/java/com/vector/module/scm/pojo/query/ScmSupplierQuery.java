@@ -1,21 +1,19 @@
 package com.vector.module.scm.pojo.query;
 
 import com.vector.common.core.query.PageQuery;
-import com.vector.module.scm.enums.ScmPurchaseStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * vector-boot
- *
+ * 供应商信息 查询参数
  * @author wengxs
- * @date 2024/5/12
+ * @date 2024/05/12
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ScmSupplierQuery extends PageQuery {
 
-    /** 供应商名称 */
+    /** 供应商 */
     private String supplierName;
 
     /** 联系人 */

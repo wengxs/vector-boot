@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * vector-boot
- *
+ * 采购单 查询参数
  * @author wengxs
- * @date 2024/5/12
+ * @date 2024/05/12
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
