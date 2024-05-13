@@ -1,20 +1,15 @@
 package com.vector.module.wms.pojo.query;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vector.common.core.query.PageQuery;
 import com.vector.module.wms.enums.BizType;
 import com.vector.module.wms.enums.WmsReceiveStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
-
 /**
- * vector-boot
- *
+ * 收货单 查询参数
  * @author wengxs
- * @date 2024/5/12
+ * @date 2024/05/13
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

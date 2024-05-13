@@ -127,38 +127,42 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
         BizAssert.notNull(purchase, "采购单不存在");
         BizAssert.isTrue(ScmPurchaseStatus.SIGNING.equals(purchase.getPurchaseStatus()),
                 String.format("只有%s状态可执行此操作", ScmPurchaseStatus.SIGNING.getDesc()));
-        List<ScmPurchaseDetail> details = scmPurchaseDetailService.list(
-                new LambdaQueryWrapper<>(ScmPurchaseDetail.class).eq(ScmPurchaseDetail::getPurchaseId, id));
-        BizAssert.notEmpty(details, "订单无采购明细");
-        // 构建收货表单
-        WmsReceiveDTO form = new WmsReceiveDTO();
-        form.setBizType(BizType.PURCHASE);
-        form.setBizNo(purchase.getPurchaseNo());
-        form.setDetails(details.stream().map(purchaseDetail -> {
-            WmsReceiveDTO.Detail detail = new WmsReceiveDTO.Detail();
-            detail.setProductId(purchaseDetail.getProductId());
-            detail.setQty(purchaseDetail.getQty());
-            return detail;
-        }).toList());
-        // 使用mq异步创建收货单
-        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE, "receiveCreate", form);
-
         purchase.setPurchaseStatus(ScmPurchaseStatus.PURCHASING);
         purchase.setSignedTime(new Date());
         baseMapper.updateById(purchase);
     }
 
     @Override
-    public void callbackLogistics(Long id, String logisticsName, String logisticsNo) {
+    @Transactional
+    public void sendAndReceiveCreate(Long id, String logisticsName, String logisticsNo) {
         ScmPurchase purchase = baseMapper.selectById(id);
         BizAssert.notNull(purchase, "采购单不存在");
         BizAssert.isTrue(ScmPurchaseStatus.PURCHASING.equals(purchase.getPurchaseStatus()),
                 String.format("只有%s状态可执行此操作", ScmPurchaseStatus.PURCHASING.getDesc()));
-        Map<String, Object> message = new HashMap<>();
-        message.put("bizNo", purchase.getPurchaseNo());
-        message.put("logisticsName", logisticsName);
-        message.put("logisticsNo", logisticsNo);
-        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE, "receiveLogistics", message);
+        List<ScmPurchaseDetail> details = scmPurchaseDetailService.list(
+                new LambdaQueryWrapper<>(ScmPurchaseDetail.class).eq(ScmPurchaseDetail::getPurchaseId, id));
+        BizAssert.notEmpty(details, "订单无采购明细");
+        purchase.setPurchaseStatus(ScmPurchaseStatus.SENT);
+        baseMapper.updateById(purchase);
+        // 构建收货表单
+        WmsReceiveDTO receiveDTO = new WmsReceiveDTO();
+        receiveDTO.setBizType(BizType.PURCHASE);
+        receiveDTO.setBizNo(purchase.getPurchaseNo());
+        receiveDTO.setLogisticsName(logisticsName);
+        receiveDTO.setLogisticsNo(logisticsNo);
+        receiveDTO.setDetails(details.stream().map(purchaseDetail -> {
+            WmsReceiveDTO.Detail detail = new WmsReceiveDTO.Detail();
+            detail.setProductId(purchaseDetail.getProductId());
+            detail.setQty(purchaseDetail.getQty());
+            return detail;
+        }).toList());
+        // 使用mq异步创建收货单
+        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE, "receiveCreate", receiveDTO);
+//        Map<String, Object> message = new HashMap<>();
+//        message.put("bizNo", purchase.getPurchaseNo());
+//        message.put("logisticsName", logisticsName);
+//        message.put("logisticsNo", logisticsNo);
+//        rabbitTemplate.convertAndSend(RabbitMqConstant.EXCHANGE, "receiveLogistics", message);
     }
 
     @Override
@@ -171,4 +175,11 @@ public class ScmPurchaseServiceImpl extends ServiceImpl<ScmPurchaseMapper, ScmPu
         baseMapper.updateById(purchase);
     }
 
+    @Override
+    public void submit(Long id) {
+        ScmPurchase purchase = baseMapper.selectById(id);
+        BizAssert.notNull(purchase, "采购单不存在");
+        purchase.setPurchaseStatus(ScmPurchaseStatus.SIGNING);
+        baseMapper.updateById(purchase);
+    }
 }

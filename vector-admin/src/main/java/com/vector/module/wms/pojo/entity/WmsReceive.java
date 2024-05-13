@@ -10,10 +10,12 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 /**
- * 收货单
+ * 收货单 Entity
+ * @author wengxs
+ * @date 2024/05/13
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("wms_receive")
 public class WmsReceive extends BaseEntity<Long> {
 
@@ -40,5 +42,4 @@ public class WmsReceive extends BaseEntity<Long> {
 
     /** 批次编号 */
     private String batchNo;
-
 }

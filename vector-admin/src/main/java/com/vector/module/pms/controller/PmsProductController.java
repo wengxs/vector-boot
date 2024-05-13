@@ -41,7 +41,7 @@ public class PmsProductController {
     }
 
     @GetMapping("/search")
-    public R<List<PmsProduct>> search(String q) {
+    public R<List<PmsProduct>> search(@RequestParam String q) {
         List<PmsProduct> data = pmsProductService.list(new LambdaQueryWrapper<>(PmsProduct.class)
                 .like(PmsProduct::getProductName, q)
                 .or()

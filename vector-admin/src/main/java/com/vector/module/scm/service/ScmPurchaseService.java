@@ -43,16 +43,22 @@ public interface ScmPurchaseService extends IService<ScmPurchase> {
     void sign(Long id);
 
     /**
-     * 物流信息回传
+     * 发货并创建收货单
      * @param id
      * @param logisticsName
      * @param logisticsNo
      */
-    void callbackLogistics(Long id, String logisticsName, String logisticsNo);
+    void sendAndReceiveCreate(Long id, String logisticsName, String logisticsNo);
 
     /**
      * 采购单完结
      * @param id
      */
     void finished(Long id);
+
+    /**
+     * 提交采购单
+     * @param id
+     */
+    void submit(Long id);
 }

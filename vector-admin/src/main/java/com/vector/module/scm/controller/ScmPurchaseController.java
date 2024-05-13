@@ -64,6 +64,17 @@ public class ScmPurchaseController {
      * @param id
      * @return
      */
+    @PutMapping("/{id}/submit")
+    public R<?> submit(@PathVariable Long id) {
+        scmPurchaseService.submit(id);
+        return R.ok();
+    }
+
+    /**
+     * 签约采购
+     * @param id
+     * @return
+     */
     @PutMapping("/{id}/sign")
     public R<?> sign(@PathVariable Long id) {
         scmPurchaseService.sign(id);
@@ -79,7 +90,7 @@ public class ScmPurchaseController {
     public R<?> send(@PathVariable Long id, @RequestBody Map<String, String> params) {
         String logisticsName = params.get("logisticsName");
         String logisticsNo = params.get("logisticsNo");
-        scmPurchaseService.callbackLogistics(id, logisticsName, logisticsNo);
+        scmPurchaseService.sendAndReceiveCreate(id, logisticsName, logisticsNo);
         return R.ok();
     }
 }

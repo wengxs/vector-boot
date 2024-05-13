@@ -55,14 +55,16 @@ public class WmsReceiveServiceImpl extends ServiceImpl<WmsReceiveMapper, WmsRece
 
     @Override
     @Transactional
-    public void create(WmsReceiveDTO receiveForm) {
+    public void create(WmsReceiveDTO receiveDTO) {
         WmsReceive receive = new WmsReceive();
         receive.setReceiveNo(orderNoGenerator.generate(WmsConstant.NUMBER_PREFIX_RECEIVE));
-        receive.setReceiveStatus(WmsReceiveStatus.UNSENT);
-        receive.setBizType(receiveForm.getBizType());
-        receive.setBizNo(receiveForm.getBizNo());
+        receive.setReceiveStatus(WmsReceiveStatus.SENT_OUT);
+        receive.setBizType(receiveDTO.getBizType());
+        receive.setBizNo(receiveDTO.getBizNo());
+        receive.setLogisticsName(receiveDTO.getLogisticsName());
+        receive.setLogisticsNo(receiveDTO.getLogisticsNo());
         baseMapper.insert(receive);
-        for (WmsReceiveDTO.Detail detail : receiveForm.getDetails()) {
+        for (WmsReceiveDTO.Detail detail : receiveDTO.getDetails()) {
             WmsReceiveDetail receiveDetail = new WmsReceiveDetail();
             receiveDetail.setReceiveId(receive.getId());
             receiveDetail.setProductId(detail.getProductId());

@@ -9,6 +9,7 @@ public enum ScmPurchaseStatus {
     APPROVING("待审批"),
     SIGNING("待签约"),
     PURCHASING("采购中"),
+    SENT("待收货"),
     FINISHED("已入库"),
     CANCELED("已取消"),
     REJECTED("已驳回");

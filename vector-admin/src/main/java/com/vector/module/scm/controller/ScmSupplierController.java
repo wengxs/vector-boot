@@ -41,7 +41,7 @@ public class ScmSupplierController {
     }
 
     @GetMapping("/search")
-    public R<List<ScmSupplier>> search(String q) {
+    public R<List<ScmSupplier>> search(@RequestParam String q) {
         List<ScmSupplier> data = scmSupplierService.list(new LambdaQueryWrapper<>(ScmSupplier.class)
                 .like(ScmSupplier::getSupplierName, q)
                 .or()

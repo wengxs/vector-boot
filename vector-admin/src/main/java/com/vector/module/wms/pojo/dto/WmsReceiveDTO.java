@@ -11,11 +11,20 @@ import java.util.List;
 @Data
 public class WmsReceiveDTO {
 
+    /** ID */
+    private Long id;
+
     /** 业务类型 */
     private BizType bizType;
 
     /** 业务单号 */
     private String bizNo;
+
+    /** 物流名称 */
+    private String logisticsName;
+
+    /** 物流编号 */
+    private String logisticsNo;
 
     /** 收货明细 */
     private List<Detail> details;

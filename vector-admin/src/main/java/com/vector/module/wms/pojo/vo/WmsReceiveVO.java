@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 收货单视图
+ * 收货单 VO
+ * @author wengxs
+ * @date 2024/05/13
  */
 @Data
 public class WmsReceiveVO {
