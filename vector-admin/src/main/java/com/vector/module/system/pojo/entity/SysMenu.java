@@ -34,5 +34,7 @@ public class SysMenu extends BaseEntity<Long> {
     private String icon;
     /** 排序 */
     private Integer sort;
+    /** 隐藏菜单 */
+    private Boolean hidden;
 
 }

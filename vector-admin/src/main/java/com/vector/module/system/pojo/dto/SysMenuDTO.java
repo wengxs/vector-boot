@@ -42,6 +42,9 @@ public class SysMenuDTO {
     /** 排序 */
     private Integer sort;
 
+    /** 隐藏菜单 */
+    private Boolean hidden;
+
     /** 子权限 */
     private List<SysMenuPermission> subPermissions;
 }

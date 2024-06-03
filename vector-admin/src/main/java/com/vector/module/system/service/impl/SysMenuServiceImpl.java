@@ -117,7 +117,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     router.setName(convertToName(menu.getComponent()));
                     router.setPath(menu.getPath());
                     router.setComponent(StringUtils.isEmpty(menu.getComponent()) ? "Layout" : menu.getComponent());
-                    router.setMeta(new RouterVO.Meta(menu.getMenuName(), menu.getIcon(), true));
+                    router.setMeta(new RouterVO.Meta(menu.getMenuName(), menu.getIcon(), menu.getHidden(), true));
                     router.setChildren(genRouters(menus, menu.getId()));
                     routers.add(router);
                 });
@@ -130,6 +130,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < paths.length - 1; i++) {
             sb.append(StringUtils.capitalize(paths[i]));
+        }
+        if (!"index".equals(paths[paths.length - 1])) {
+            sb.append(StringUtils.capitalize(paths[paths.length - 1]));
         }
         return sb.toString();
     }
