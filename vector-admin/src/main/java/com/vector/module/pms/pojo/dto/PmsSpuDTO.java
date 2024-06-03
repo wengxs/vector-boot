@@ -2,6 +2,7 @@ package com.vector.module.pms.pojo.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,4 +30,21 @@ public class PmsSpuDTO {
 
     /** 商品图片 */
     private List<String> images;
+
+    /**
+     * 商品属性
+     */
+    @Data
+    public static class Sku {
+        /** skuID */
+        private Long skuId;
+        /** 属性ID */
+        private Long attrId;
+        /** 属性名称 */
+        private String attrName;
+        /** 属性值 */
+        private String attrValue;
+        /** 售价 */
+        private BigDecimal salePrice;
+    }
 }
