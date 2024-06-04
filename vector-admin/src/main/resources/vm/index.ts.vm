@@ -7,8 +7,7 @@ export const list${BizName} = (queryParams: ${BizName}Query): AxiosPromise<PageR
   request.get('/${moduleName}/${bizName}/list', { params: queryParams });
 
 /** 获取详情 */
-export const get${BizName} = (id: number): AxiosPromise<${BizName}VO> =>
-  request.get(`/${moduleName}/${bizName}/${id}`);
+export const get${BizName} = (id: number): AxiosPromise<${BizName}VO> => request.get(`/${moduleName}/${bizName}/${id}`);
 
 /** 添加 */
 export const add${BizName} = (data: ${BizName}Form) => request.post('/${moduleName}/${bizName}', data);
