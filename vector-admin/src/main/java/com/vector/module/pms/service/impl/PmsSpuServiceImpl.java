@@ -5,22 +5,20 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vector.common.core.util.BizAssert;
 import com.vector.module.pms.pojo.dto.PmsSpuDTO;
-import com.vector.module.pms.pojo.entity.PmsSpu;
-import com.vector.module.pms.pojo.entity.PmsSpuDescription;
-import com.vector.module.pms.pojo.entity.PmsSpuImage;
+import com.vector.module.pms.pojo.entity.*;
 import com.vector.module.pms.enums.PmsSpuStatus;
 import com.vector.module.pms.mapper.PmsSpuMapper;
 import com.vector.module.pms.pojo.query.PmsSpuQuery;
-import com.vector.module.pms.service.PmsSpuDescriptionService;
-import com.vector.module.pms.service.PmsSpuImageService;
-import com.vector.module.pms.service.PmsSpuService;
+import com.vector.module.pms.service.*;
 import com.vector.module.pms.pojo.vo.PmsSpuVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品信息 ServiceImpl
@@ -35,6 +33,12 @@ public class PmsSpuServiceImpl extends ServiceImpl<PmsSpuMapper, PmsSpu>
     private PmsSpuImageService pmsSpuImageService;
     @Autowired
     private PmsSpuDescriptionService pmsSpuDescriptionService;
+    @Autowired
+    private PmsSkuService pmsSkuService;
+    @Autowired
+    private PmsAttrService pmsAttrService;
+    @Autowired
+    private PmsSpuSkuAttrRelationService pmsSpuSkuAttrRelationService;
 
     @Override
     public PmsSpuVO getVOById(Long id) {
@@ -47,11 +51,45 @@ public class PmsSpuServiceImpl extends ServiceImpl<PmsSpuMapper, PmsSpu>
     }
 
     private void saveImage(Long spuId, List<String> images) {
-        for (int i = 0; i < images.size(); i++) {
+        for (String image : images) {
             PmsSpuImage spuImage = new PmsSpuImage();
             spuImage.setSpuId(spuId);
-            spuImage.setUrl(images.get(i));
+            spuImage.setUrl(image);
             pmsSpuImageService.save(spuImage);
+        }
+    }
+
+    private void saveSku(PmsSpu pmsSpu, List<PmsSpuDTO.Sku> skus) {
+        Map<String, PmsAttr> attrMap = new HashMap<>();
+        for (PmsSpuDTO.Sku sku : skus) {
+            PmsSku pmsSku = new PmsSku();
+            pmsSku.setSpuId(pmsSpu.getId());
+            pmsSku.setPrice(sku.getPrice());
+            pmsSku.setStock(sku.getStock());
+            pmsSku.setOnSale(sku.getOnSale());
+            pmsSku.setImage(pmsSpu.getDefaultImage());
+            pmsSkuService.save(pmsSku);
+            for (PmsSpuDTO.Attr attr : sku.getAttrs()) {
+                PmsAttr pmsAttr = attrMap.get(attr.getName());
+                if (pmsAttr == null) {
+                    pmsAttr = pmsAttrService.getOne(new LambdaQueryWrapper<>(PmsAttr.class)
+                            .eq(PmsAttr::getCategoryId, pmsSpu.getCategoryId())
+                            .eq(PmsAttr::getAttrName, attr.getName()));
+                    attrMap.put(attr.getName(), pmsAttr);
+                }
+                if (pmsAttr == null) {
+                    pmsAttr = new PmsAttr();
+                    pmsAttr.setAttrName(attr.getName());
+                    pmsAttr.setCategoryId(pmsSpu.getCategoryId());
+                    pmsAttrService.save(pmsAttr);
+                }
+                PmsSpuSkuAttrRelation spec = new PmsSpuSkuAttrRelation();
+                spec.setSpuId(pmsSpu.getId());
+                spec.setAttrId(pmsAttr.getId());
+                spec.setSkuId(pmsSku.getId());
+                spec.setAttrValue(attr.getValue());
+                pmsSpuSkuAttrRelationService.save(spec);
+            }
         }
     }
 
@@ -69,7 +107,8 @@ public class PmsSpuServiceImpl extends ServiceImpl<PmsSpuMapper, PmsSpu>
         spuDescription.setSpuId(pmsSpu.getId());
         spuDescription.setDescription(spuDTO.getDescription());
         pmsSpuDescriptionService.save(spuDescription);
-        saveImage(spuDTO.getId(), images);
+        saveImage(pmsSpu.getId(), images);
+        saveSku(pmsSpu, spuDTO.getSkus());
     }
 
     @Override

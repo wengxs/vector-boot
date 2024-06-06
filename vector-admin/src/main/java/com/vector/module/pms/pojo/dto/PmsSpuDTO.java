@@ -31,20 +31,30 @@ public class PmsSpuDTO {
     /** 商品图片 */
     private List<String> images;
 
+    private List<Sku> skus;
+
     /**
-     * 商品属性
+     * 商品SKU
      */
     @Data
     public static class Sku {
         /** skuID */
         private Long skuId;
-        /** 属性ID */
-        private Long attrId;
-        /** 属性名称 */
-        private String attrName;
-        /** 属性值 */
-        private String attrValue;
         /** 售价 */
-        private BigDecimal salePrice;
+        private BigDecimal price;
+        /** 库存 */
+        private Integer stock;
+        /** 上架 */
+        private Boolean onSale;
+        /** 属性列表 */
+        private List<Attr> attrs;
+    }
+
+    @Data
+    public static class Attr {
+
+        private String name;
+
+        private String value;
     }
 }
