@@ -104,7 +104,7 @@ const close = () => {
   formRef.value.resetFields();
   formRef.value.clearValidate();
   Object.keys(formData).forEach((key) => {
-    formData[key] = undefined;
+    (formData as {[key: string]: any})[key] = undefined;
   });
 };
 

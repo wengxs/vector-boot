@@ -20,9 +20,15 @@ public class SysUserQuery extends PageQuery {
     /** 手机号码 */
     private String mobile;
 
+    /** 邮箱 */
+    private String email;
+
     /** 帐号状态（0停用，1正常） */
     private SysUserStatus userStatus;
 
     /** 角色ID */
     private Long roleId;
+
+    /** 部门ID */
+    private Long deptId;
 }

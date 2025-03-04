@@ -44,6 +44,7 @@ public class SysCurrentController {
         SysUser sysUser = sysUserService.getById(SecurityUtils.getUserId());
         CurrentUserVO currentUserVO = new CurrentUserVO();
         currentUserVO.setUsername(sysUser.getUsername());
+        currentUserVO.setNickname(sysUser.getNickname());
         currentUserVO.setAvatar(sysUser.getAvatar());
         currentUserVO.setMobile(sysUser.getMobile());
         if (SecurityConstant.ADMIN_ID.equals(sysUser.getId())) {

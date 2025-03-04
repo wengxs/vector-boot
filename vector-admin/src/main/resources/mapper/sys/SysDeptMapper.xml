@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.system.mapper.SysDeptMapper">
+
+    <resultMap id="SysDeptVOResult" type="com.vector.module.system.pojo.vo.SysDeptVO">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="leader" column="leader"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="deptStatus" column="dept_status"/>
+        <result property="remark" column="remark"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <sql id="selectSysDeptVOSql">
+        SELECT p.id, p.create_time, p.parent_id, p.ancestors, p.dept_name, p.leader, p.phone, p.email, p.dept_status, p.remark, p.sort
+        FROM sys_dept p
+    </sql>
+
+    <select id="selectVOById" resultMap="SysDeptVOResult" parameterType="Long">
+        <include refid="selectSysDeptVOSql"/>
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectVOPage" resultMap="SysDeptVOResult"
+            parameterType="com.vector.module.system.pojo.query.SysDeptQuery">
+        <include refid="selectSysDeptVOSql"/>
+        <where>
+            <if test="q.createBegin != null and q.createEnd != null">
+                AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00')
+                AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="q.parentId != null">
+                AND p.parent_id = #{q.parentId}
+            </if>
+            <if test="q.deptName != null and q.deptName != ''">
+                AND p.dept_name = #{q.deptName}
+            </if>
+            <if test="q.deptStatus != null and q.deptStatus != ''">
+                AND p.dept_status = #{q.deptStatus}
+            </if>
+        </where>
+    </select>
+
+</mapper>
