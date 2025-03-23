@@ -20,7 +20,7 @@ public interface SecurityConstant {
 
     String TOKEN_INFO_CLIENT_ID = "clientId";
 
-    String TOKEN_USERNAME = "username";
+    String TOKEN_INFO_USERNAME = "username";
 
     String TOKEN_INFO_USER_ID = "userId";
 
