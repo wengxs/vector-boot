@@ -23,6 +23,9 @@ public class JwtUtils {
         claims.put(SecurityConstant.LOGIN_USER_KEY, loginUser.getToken());
         claims.put(SecurityConstant.TOKEN_INFO_CLIENT_ID, loginUser.getClientId());
         claims.put(SecurityConstant.TOKEN_INFO_USER_ID, loginUser.getUserId());
+        claims.put(SecurityConstant.TOKEN_INFO_DEPT_ID, loginUser.getDeptId());
+        claims.put(SecurityConstant.TOKEN_INFO_DATA_SCOPE, loginUser.getDataScope());
+        claims.put(SecurityConstant.TOKEN_INFO_AUTHORITIES, loginUser.getAuthorities());
         return Jwts.builder()
                 .claims(claims)
                 .subject(loginUser.getUsername())

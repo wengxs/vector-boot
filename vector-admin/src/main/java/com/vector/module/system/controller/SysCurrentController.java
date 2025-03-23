@@ -1,6 +1,6 @@
 package com.vector.module.system.controller;
 
-import com.vector.common.core.constant.SecurityConstant;
+import com.vector.common.security.constant.SecurityConstant;
 import com.vector.common.core.result.R;
 import com.vector.common.core.util.BizAssert;
 import com.vector.common.security.domain.LoginUser;

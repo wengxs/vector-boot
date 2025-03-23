@@ -10,6 +10,7 @@ import com.vector.module.system.service.SysDeptService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class SysDeptController {
     private SysDeptService sysDeptService;
 
     @GetMapping("/list")
+    @PreAuthorize("@ss.hasAuthority('sys:dept:query')")
     public R<List<SysDeptVO>> list(SysDeptQuery query) {
         List<SysDeptVO> list = sysDeptService.listTree();
         return R.ok(filterQuery(list, query));
@@ -56,11 +58,13 @@ public class SysDeptController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@ss.hasAuthority('sys:dept:query')")
     public R<SysDeptVO> get(@PathVariable Long id) {
         return R.ok(sysDeptService.getVOById(id));
     }
 
     @PostMapping
+    @PreAuthorize("@ss.hasAuthority('sys:dept:add')")
     public R<?> add(@RequestBody SysDeptDTO deptDTO) {
         SysDept sysDept = new SysDept();
         BeanUtils.copyProperties(deptDTO, sysDept);
@@ -75,6 +79,7 @@ public class SysDeptController {
     }
 
     @PutMapping
+    @PreAuthorize("@ss.hasAuthority('sys:dept:edit')")
     public R<?> update(@RequestBody SysDeptDTO deptDTO) {
         // TODO 更新下级的祖级
         SysDept sysDept = new SysDept();
@@ -84,6 +89,7 @@ public class SysDeptController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("@ss.hasAuthority('sys:dept:del')")
     public R<?> delete(@PathVariable List<Long> ids) {
         sysDeptService.removeByIds(ids);
         return R.ok();

@@ -16,6 +16,7 @@ import com.vector.module.system.service.SysDictOptionService;
 import com.vector.module.system.service.SysDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,17 +35,20 @@ public class SysDictController {
     private SysDictOptionService sysDictOptionService;
 
     @GetMapping("/list")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:query')")
     public R<PageResult> list(SysDictQuery query) {
         IPage<SysDictVO> page = sysDictService.pageVO(Pageable.getPage(query), query);
         return R.page(page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:query')")
     public R<SysDictVO> get(@PathVariable Long id) {
         return R.ok(sysDictService.getVOById(id));
     }
 
     @PostMapping
+    @PreAuthorize("@ss.hasAuthority('sys:dict:add')")
     public R<?> add(@RequestBody SysDictDTO dictDTO) {
         SysDict sysDict = new SysDict();
         BeanUtils.copyProperties(dictDTO, sysDict);
@@ -53,6 +57,7 @@ public class SysDictController {
     }
 
     @PutMapping
+    @PreAuthorize("@ss.hasAuthority('sys:dict:edit')")
     public R<?> update(@RequestBody SysDictDTO dictDTO) {
         SysDict sysDict = new SysDict();
         BeanUtils.copyProperties(dictDTO, sysDict);
@@ -61,12 +66,14 @@ public class SysDictController {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:del')")
     public R<?> delete(@PathVariable List<Long> ids) {
         sysDictService.removeByIds(ids);
         return R.ok();
     }
 
     @GetMapping("/option/list")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:query')")
     public R<List<SysDictOption>> listOption(@RequestParam String dictKey,
                                              @RequestParam(required = false, defaultValue = "false") Boolean onlyEnabled) {
         List<SysDictOption> list = sysDictOptionService.list(new LambdaQueryWrapper<SysDictOption>()
@@ -77,6 +84,7 @@ public class SysDictController {
     }
 
     @GetMapping("/option/{id}")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:query')")
     public R<SysDictOptionVO> getOption(@PathVariable String id) {
         SysDictOption dictOption = sysDictOptionService.getById(id);
         SysDictOptionVO vo = new SysDictOptionVO();
@@ -86,6 +94,7 @@ public class SysDictController {
     }
 
     @PostMapping("/option")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:add')")
     public R<?> addOption(@RequestBody SysDictOptionDTO dictOptionDTO) {
         SysDictOption sysDictOption = new SysDictOption();
         BeanUtils.copyProperties(dictOptionDTO, sysDictOption);
@@ -94,6 +103,7 @@ public class SysDictController {
     }
 
     @PutMapping("/option")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:edit')")
     public R<?> updateOption(@RequestBody SysDictOptionDTO dictOptionDTO) {
         SysDictOption sysDictOption = new SysDictOption();
         BeanUtils.copyProperties(dictOptionDTO, sysDictOption);
@@ -102,6 +112,7 @@ public class SysDictController {
     }
 
     @DeleteMapping("/option/{id}")
+    @PreAuthorize("@ss.hasAuthority('sys:dict:del')")
     public R<?> deleteOption(@PathVariable Long id) {
         sysDictOptionService.removeById(id);
         return R.ok();

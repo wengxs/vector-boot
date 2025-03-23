@@ -9,6 +9,7 @@ import com.vector.module.system.pojo.vo.MenuTree;
 import com.vector.module.system.pojo.vo.SysMenuVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class SysMenuController {
     private SysMenuService sysMenuService;
 
     @GetMapping("/list")
-//    @PreAuthorize("hasAuthority('sys:menu:query')")
+    @PreAuthorize("@ss.hasAuthority('sys:menu:query')")
     public R<List<SysMenuVO>> list(SysMenuQuery query) {
         List<SysMenuVO> list = sysMenuService.listTree();
         return R.ok(filterQuery(list, query));
@@ -43,33 +44,32 @@ public class SysMenuController {
     }
 
     @GetMapping("/router")
-//    @PreAuthorize("hasAuthority('sys:menu:query')")
     public R<List<MenuTree>> router() {
         return R.ok(sysMenuService.routerTree());
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAuthority('sys:menu:query')")
+    @PreAuthorize("@ss.hasAuthority('sys:menu:query')")
     public R<SysMenu> get(@PathVariable Long id) {
         return R.ok(sysMenuService.getById(id));
     }
 
     @PostMapping
-//    @PreAuthorize("hasAuthority('sys:menu:add')")
+    @PreAuthorize("@ss.hasAuthority('sys:menu:add')")
     public R<?> add(@RequestBody SysMenuDTO menuDTO) {
         sysMenuService.save(menuDTO);
         return R.ok();
     }
 
     @PutMapping
-//    @PreAuthorize("hasAuthority('sys:menu:edit')")
+    @PreAuthorize("@ss.hasAuthority('sys:menu:edit')")
     public R<?> update(@RequestBody SysMenu sysMenu) {
         sysMenuService.updateById(sysMenu);
         return R.ok();
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAuthority('sys:menu:del')")
+    @PreAuthorize("@ss.hasAuthority('sys:menu:del')")
     public R<?> delete(@PathVariable Long id) {
         sysMenuService.removeAllById(id, true);
         return R.ok();

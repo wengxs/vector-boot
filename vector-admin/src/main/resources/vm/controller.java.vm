@@ -11,6 +11,7 @@ import ${packageName}.pojo.vo.${ClassName}VO;
 import ${packageName}.service.${ClassName}Service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ${ClassName}Controller {
     private ${ClassName}Service ${className}Service;
 
     @GetMapping("/list")
+    @PreAuthorize("@ss.hasAuthority('${permissionPrefix}query')")
     public R<PageResult> list(${ClassName}Query query) {
         IPage<${ClassName}VO> page = ${className}Service.pageVO(Pageable.getPage(query), query);
 ###foreach ($tableField in $tableFields)
@@ -49,11 +51,13 @@ public class ${ClassName}Controller {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@ss.hasAuthority('${permissionPrefix}query')")
     public R<${ClassName}VO> get(@PathVariable ${pkJavaType} id) {
         return R.ok(${className}Service.getVOById(id));
     }
 
     @PostMapping
+    @PreAuthorize("@ss.hasAuthority('${permissionPrefix}add')")
     public R<?> add(@RequestBody ${ClassName}DTO ${bizName}DTO) {
         ${ClassName} ${className} = new ${ClassName}();
         BeanUtils.copyProperties(${bizName}DTO, ${className});
@@ -62,6 +66,7 @@ public class ${ClassName}Controller {
     }
 
     @PutMapping
+    @PreAuthorize("@ss.hasAuthority('${permissionPrefix}edit')")
     public R<?> update(@RequestBody ${ClassName}DTO ${bizName}DTO) {
         ${ClassName} ${className} = new ${ClassName}();
         BeanUtils.copyProperties(${bizName}DTO, ${className});
@@ -70,6 +75,7 @@ public class ${ClassName}Controller {
     }
 
     @DeleteMapping("/{ids}")
+    @PreAuthorize("@ss.hasAuthority('${permissionPrefix}del')")
     public R<?> delete(@PathVariable List<${pkJavaType}> ids) {
         ${className}Service.removeByIds(ids);
         return R.ok();

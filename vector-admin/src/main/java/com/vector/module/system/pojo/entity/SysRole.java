@@ -2,6 +2,7 @@ package com.vector.module.system.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.vector.common.core.entity.BaseEntity;
+import com.vector.common.mybatis.enums.DataScope;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,9 @@ public class SysRole extends BaseEntity<Long> {
 
     /** 角色标识 */
     private String roleKey;
+
+    /** 数据权限 */
+    private DataScope dataScope;
 
     /** 角色描述 */
     private String description;
