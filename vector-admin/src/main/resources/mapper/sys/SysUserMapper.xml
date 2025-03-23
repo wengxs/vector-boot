@@ -7,16 +7,23 @@
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
         <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
         <result property="mobile" column="mobile"/>
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
         <result property="avatar" column="avatar"/>
         <result property="userStatus" column="user_status"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
         <result property="roleNames" column="role_names"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectSysUserVOSql">
-        SELECT p.id, p.create_time, p.create_by, p.username, p.mobile, p.user_status, p.avatar,
-               GROUP_CONCAT(sr.role_name) role_names
+        SELECT p.id, p.create_time, p.create_by, p.username, p.nickname, p.mobile, p.email, p.gender, p.user_status, p.avatar,
+               p.dept_id, sd.dept_name, p.remark, GROUP_CONCAT(sr.role_name) role_names
         FROM sys_user p
+        LEFT JOIN sys_dept sd ON sd.id=p.dept_id
         LEFT JOIN sys_user_role sur ON sur.user_id=p.id
         LEFT JOIN sys_role sr ON sr.id=sur.role_id
     </sql>
@@ -35,11 +42,18 @@
             <if test="q.createBegin != null and q.createEnd != null">
                 AND p.create_time BETWEEN DATE_FORMAT(#{q.createBegin},'%Y-%m-%d 00:00:00') AND DATE_FORMAT(#{q.createEnd},'%Y-%m-%d 23:59:59')
             </if>
-            <if test="q.username != null and q.username != ''"> AND p.username LIKE concat('%', #{q.username}, '%')</if>
+            <if test="q.username != null and q.username != ''">
+                AND (p.username LIKE CONCAT('%', #{q.username}, '%') OR p.nickname LIKE CONCAT('%', #{q.username}, '%'))
+            </if>
             <if test="q.mobile != null and q.mobile != ''"> AND p.mobile = #{q.mobile}</if>
+            <if test="q.email != null and q.email != ''"> AND p.email LIKE CONCAT('%', #{q.email}, '%')</if>
             <if test="q.userStatus != null"> AND p.user_status = #{q.userStatus}</if>
+            <if test="q.deptId != null">
+                AND EXISTS (SELECT 1 FROM sys_dept sd WHERE sd.id = p.dept_id
+                AND (sd.id = #{q.deptId} OR FIND_IN_SET(#{q.deptId},sd.ancestors)))
+            </if>
             <if test="q.roleId != null">
-                AND EXISTS(SELECT 1 FROM sys_user_role sur WHERE sur.user_id=p.id AND usr.role_id=#{q.roleId})
+                AND EXISTS(SELECT 1 FROM sys_user_role sur WHERE sur.user_id=p.id AND sur.role_id=#{q.roleId})
             </if>
         </where>
         GROUP BY p.id

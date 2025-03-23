@@ -1,5 +1,6 @@
 package com.vector.module.system.pojo.vo;
 
+import com.vector.common.mybatis.enums.DataScope;
 import lombok.Data;
 
 import java.util.Date;
@@ -26,6 +27,9 @@ public class SysRoleVO {
 
     /** 角色编码 */
     private String roleKey;
+
+    /** 数据权限 */
+    private DataScope dataScope;
 
     /** 角色描述 */
     private String description;

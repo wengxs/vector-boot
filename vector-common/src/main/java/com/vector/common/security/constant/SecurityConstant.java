@@ -18,15 +18,21 @@ public interface SecurityConstant {
 
     String TOKEN_INFO = "TokenInfo";
 
-    String TOKEN_USERNAME = "user_name";
+    String TOKEN_INFO_CLIENT_ID = "clientId";
 
-    String TOKEN_INFO_USER_ID = "user_id";
+    String TOKEN_INFO_USERNAME = "username";
 
-    String TOKEN_INFO_CLIENT_ID = "client_id";
+    String TOKEN_INFO_USER_ID = "userId";
+
+    String TOKEN_INFO_DEPT_ID = "deptId";
+
+    String TOKEN_INFO_DATA_SCOPE = "dataScope";
+
+    String TOKEN_INFO_AUTHORITIES = "authorities";
 
 
-    /** JWT存储权限前缀 */
-    String AUTHORITY_PREFIX = "ROLE_";
+    /** 角色前缀 */
+    String ROLE_PREFIX = "ROLE_";
 
     /** JWT存储权限属性 */
     String JWT_AUTHORITIES_KEY = "authorities";
@@ -40,4 +46,6 @@ public interface SecurityConstant {
     String ADMIN_PERMISSIONS = "*:*:*";
 
     String ADMIN_ROLES = "ROLE_*";
+
+    String DEFAULT_PASSWORD = "123456";
 }

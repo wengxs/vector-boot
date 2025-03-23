@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vector.module.system.mapper.SysDictMapper">
+
+    <resultMap id="SysDictVOResult" type="com.vector.module.system.pojo.vo.SysDictVO">
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="dictName" column="dict_name"/>
+        <result property="dictKey" column="dict_key"/>
+        <result property="dictStatus" column="dict_status"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectSysDictVOSql">
+        SELECT p.id, p.create_time, p.dict_name, p.dict_key, p.dict_status, p.remark
+        FROM sys_dict p
+    </sql>
+
+    <select id="selectVOById" resultMap="SysDictVOResult" parameterType="Long">
+        <include refid="selectSysDictVOSql"/>
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectVOPage" resultMap="SysDictVOResult"
+            parameterType="com.vector.module.system.pojo.query.SysDictQuery">
+        <include refid="selectSysDictVOSql"/>
+        <where>
+            <if test="q.dictName != null and q.dictName != ''">
+                AND (p.dict_name LIKE CONCAT('%', #{q.dictName}, '%') OR p.dict_key LIKE CONCAT('%', #{q.dictName}, '%'))
+            </if>
+            <if test="q.dictStatus != null and q.dictStatus != ''">
+                AND p.dict_status = #{q.dictStatus}
+            </if>
+        </where>
+    </select>
+
+</mapper>

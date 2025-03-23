@@ -26,6 +26,12 @@ public class LoginUser implements UserDetails {
     /** 密码 */
     private String password;
 
+    /** 部门ID */
+    private Long deptId;
+
+    /** 数据权限 */
+    private String dataScope;
+
     /** 帐号状态（0停用，1正常） */
     private Boolean enabled;
 

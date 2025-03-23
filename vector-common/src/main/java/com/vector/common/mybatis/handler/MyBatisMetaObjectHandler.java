@@ -1,4 +1,4 @@
-package com.vector.common.web.handler;
+package com.vector.common.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.vector.common.security.util.SecurityUtils;
@@ -24,7 +24,6 @@ public class MyBatisMetaObjectHandler implements MetaObjectHandler {
         Long operator = getOperator();
         this.setFieldValByName("createBy", operator, metaObject);
         this.setFieldValByName("updateBy", operator, metaObject);
-
     }
 
     @Override
