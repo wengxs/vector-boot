@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024/5/5
  */
 @RestController
-@RequestMapping("/common/file")
+@RequestMapping("/third/file")
 public class FileController {
 
     @Autowired
